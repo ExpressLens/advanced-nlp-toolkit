@@ -46,4 +46,43 @@ public class CrossValidation implements ICrossfoldValidator {
 			System.gc();
 			
 			List<MLExample> test_set = new ArrayList<MLExample>();
-			for(int
+			for(int i=start_index;i<end_index;i++)
+				test_set.add(examples.get(i).clone());
+			
+			mlModel.test(test_set);
+			
+//			HibernateUtil.endTransaction();
+			results.add(Evaluator.getEvaluationResult(test_set));
+		}
+		
+
+		HashMap<String, ResultRow> 
+			evaluationAverageResult = 
+			new HashMap<String, 
+				ResultRow>();
+		for(EvaluationResult fold_result : results)
+		{
+			for(String evaluated_class: fold_result.evaluationResultByClass.keySet())
+			{
+				ResultRow row =
+					fold_result.evaluationResultByClass.get(evaluated_class);
+				ResultRow averageRow =
+					evaluationAverageResult.get(evaluated_class);
+				if(averageRow==null)
+					evaluationAverageResult.put(evaluated_class,row);
+				else{
+					averageRow.FN += row.FN;
+					averageRow.FP += row.FP;
+					averageRow.TN += row.TN;
+					averageRow.TP += row.TP;
+				}
+			}
+		}
+		for(String evaluated_class: evaluationAverageResult.keySet())
+		{
+			ResultRow averageRow =
+				evaluationAverageResult.get(evaluated_class);
+			FileUtil.logLine("Class: "+evaluated_class);
+			averageRow.print();
+		}
+		EvaluationResult er = new Evaluatio

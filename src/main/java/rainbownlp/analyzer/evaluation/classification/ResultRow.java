@@ -23,4 +23,28 @@ public class ResultRow
 	}
 	public void print() {
 		System.out.println(getReport());
-//		Util.log(getR
+//		Util.log(getReport(), Level.INFO);
+	}
+	DecimalFormat twoDForm = new DecimalFormat("###.##");
+    
+	public double getRecall()
+	{
+		if((TP+FN) == 0) return 1;
+		double r = 100*(double)TP/(double)(TP+FN);
+		return Double.valueOf(twoDForm.format(r));
+	}
+	public double getPrecision()
+	{
+		if((TP+FP) == 0) return 1;
+		double p = 100*(double)TP/(double)(TP+FP);
+		return Double.valueOf(twoDForm.format(p));
+	}
+	public double getFValue()
+	{
+		double prec = getPrecision();
+		double recall = getRecall();
+		if((prec+recall) == 0) return 0;
+		double f = 2*(prec*recall)/(prec+recall);
+		 return Double.valueOf(twoDForm.format(f));
+	}
+}

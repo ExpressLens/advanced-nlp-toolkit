@@ -85,4 +85,15 @@ public class CrossValidation implements ICrossfoldValidator {
 			FileUtil.logLine("Class: "+evaluated_class);
 			averageRow.print();
 		}
-		EvaluationResult er = new Evaluatio
+		EvaluationResult er = new EvaluationResult();
+		er.evaluationResultByClass = evaluationAverageResult;
+		
+		ConfigurationUtil.crossFoldCurrent = 0;
+		
+		return er;
+	}
+	@Override
+	public LearnerEngine getLearnerEngine() {
+		return mlModel;
+	}
+}

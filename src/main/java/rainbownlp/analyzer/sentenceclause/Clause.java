@@ -77,3 +77,37 @@ public class Clause implements Cloneable, Comparable<Clause>{
 		//offsetMap = new HashMap<Integer, String>();
 
 	}
+	public ArrayList<String> getClauseSubjStrings()
+	{
+		if (clauseSubjStrings ==null)
+		{
+			clauseSubjStrings = new ArrayList<String>();
+			for (DependencyLine sbj_dep:clauseSubject)
+			{
+				clauseSubjStrings.add(sbj_dep.secondPart.toLowerCase());
+			}
+		}
+		return clauseSubjStrings;
+	}
+
+	public boolean subjFirstPerson()
+	{
+		boolean is_first_person = false;
+		ArrayList<String> subjs_strings = getClauseSubjStrings();
+
+		if(subjs_strings.contains("I") || subjs_strings.contains("i"))
+		{
+			is_first_person = true;
+		}
+		return is_first_person; 
+	}
+
+	@Override
+	public int compareTo(Clause o) {
+
+		return 0;
+	}
+	
+
+	
+}

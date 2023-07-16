@@ -59,3 +59,46 @@ public class SentenceClauseManager {
 			}
 		}
 		return phrase_strings;
+	}
+	
+	public SentenceClauseManager(Artifact relatedSentence) throws Exception
+	{
+		setRelatedSentence(relatedSentence);
+		setSentContent(relatedSentence.getContent());
+		setPosTags(relatedSentence.getPOS());
+		loadClauses();
+	}
+
+	
+	void loadClauses() throws Exception
+	{
+		
+		if (relatedSentence.getPOS() ==null)
+		{
+			StanfordParser s_parser = new StanfordParser();
+			s_parser.parse(sentContent);
+			setPosTags(s_parser.getTagged());
+			setStanDependenciesStr(s_parser.getDependencies());
+		
+		}
+		else
+		{
+			setPosTags(relatedSentence.getPOS());
+			setStanDependenciesStr(relatedSentence.getStanDependency());
+		}
+		
+		tokenMap = StanfordDependencyUtil.getTokens(posTags);
+
+		//populate lemma
+		lemmaMap = StanfordDependencyUtil.getLemmaMap(posTags);
+
+		lemmaTokenMap = StanfordDependencyUtil.getLemmaTokenmaps(posTags);
+		
+		analyzeSentence();
+	}
+	
+//	TODO: generally improve this method, it is not perfect
+private void analyzeSentence() throws Exception {
+		
+		sentDepLines =StanfordDependencyUtil.parseDepLinesFromString(getStanDependenciesStr());
+		cla

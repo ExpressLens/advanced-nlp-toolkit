@@ -101,4 +101,36 @@ public class SentenceClauseManager {
 private void analyzeSentence() throws Exception {
 		
 		sentDepLines =StanfordDependencyUtil.parseDepLinesFromString(getStanDependenciesStr());
-		cla
+		clauses = new ArrayList<Clause>();
+		Clause curClause = new Clause();
+		
+		ArrayList<DependencyLine> toBeProcessesd = sentDepLines;
+
+		for(int i=0; i<sentDepLines.size();i++)
+		{
+			DependencyLine curLine = sentDepLines.get(i);
+			
+			if(curLine.relationName == null) continue;
+			offsetMap.put(curLine.firstOffset, curLine.firstPart);
+			offsetMap.put(curLine.secondOffset, curLine.secondPart);
+			
+			if(curLine.relationName.equals("nsubj") || curLine.relationName.equals("xsubj"))
+			{
+//				if (curLine.firstOffset -curLine.secondOffset>10)
+//					continue;
+				Clause governor_cl = clauseMap.get(curLine.firstOffset);
+				Artifact related_word = relatedSentence.getChildByWordIndex(curLine.firstOffset-1);
+				String pos = related_word.getPOS();
+				
+				//if the verb is already observed
+				if (governor_cl !=null)
+				{
+					governor_cl.clauseSubject.add(curLine);
+					clauseMap.put(curLine.secondOffset, governor_cl);
+				}
+				else
+				{
+					governor_cl = new Clause();
+
+					// subj and verb will be added to the new clause
+					go

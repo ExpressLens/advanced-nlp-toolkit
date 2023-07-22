@@ -166,4 +166,44 @@ private void analyzeSentence() throws Exception {
 	
 					
 				}
-				//get all dep lines that are rela
+				//get all dep lines that are related to this
+
+			}
+			if(curLine.relationName.equals("dobj")|| 
+					curLine.relationName.equals("iobj")||
+					curLine.relationName.equals("nsubjpass"))
+			{
+		
+				Clause governor_cl = getGovernorVerbOrComplement(curLine);
+				
+//				String dep_tag = getPOSTag(curLine.secondOffset);
+//				if (dep_tag != null && dep_tag.startsWith("JJ"))
+//				{
+//					governor_cl.complement = curLine.secondPart;
+//					governor_cl.complementOffset= curLine.secondOffset;
+//					
+//				}
+//				else
+//				{
+					SentenceObject new_object = new SentenceObject();
+					new_object.content = curLine.secondPart;
+					new_object.contentOffset = curLine.secondOffset;
+					governor_cl.clauseObject.add(new_object);
+
+//				}
+		
+				clauseMap.put(curLine.secondOffset, governor_cl);
+			}
+	
+			if(curLine.relationName.equals("cop"))
+			{
+				Clause governor = clauseMap.get(curLine.firstOffset);
+				Clause dependent = clauseMap.get(curLine.secondOffset);
+				
+				if (governor != null ||dependent != null)
+						
+				{
+					// it means that we have observed the verb 
+					if (dependent != null && governor == null)
+					{
+						dependent.complem

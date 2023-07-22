@@ -133,4 +133,37 @@ private void analyzeSentence() throws Exception {
 					governor_cl = new Clause();
 
 					// subj and verb will be added to the new clause
-					go
+					governor_cl.clauseSubject.add(curLine);
+					
+					if (pos!= null && (pos.startsWith("VB") || pos.startsWith("MD")))
+					{
+						governor_cl.clauseVerb.verbMainPart = curLine.firstPart;
+						governor_cl.clauseVerb.offset = curLine.firstOffset;
+						clauseMap.put(curLine.firstOffset, governor_cl);
+						clauseMap.put(curLine.secondOffset, governor_cl);
+						
+					}
+					//TODO: process more
+					else if(pos!= null && (pos.startsWith("JJ") || pos.startsWith("NN")))
+					{
+						//if the relation cop also is present where the first part is the complement
+						boolean is_comp = false;
+						for (DependencyLine d:sentDepLines)
+						{
+							if (d.relationName.equals("cop") && d.firstOffset==curLine.firstOffset)
+								is_comp = true;
+						}
+						if (is_comp==true)
+						{
+							governor_cl.complement = curLine.firstPart;
+							governor_cl.complementOffset = curLine.firstOffset;
+							clauseMap.put(curLine.firstOffset, governor_cl);
+							clauseMap.put(curLine.secondOffset, governor_cl);
+						}
+
+						
+					}
+	
+					
+				}
+				//get all dep lines that are rela

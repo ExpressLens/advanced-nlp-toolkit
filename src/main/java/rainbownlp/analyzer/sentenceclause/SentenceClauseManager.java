@@ -206,4 +206,40 @@ private void analyzeSentence() throws Exception {
 					// it means that we have observed the verb 
 					if (dependent != null && governor == null)
 					{
-						dependent.complem
+						dependent.complement = curLine.firstPart;
+						dependent.complementOffset = curLine.firstOffset;
+						
+						clauseMap.put(curLine.firstOffset, dependent);
+					}
+					else if(governor != null)
+					{
+						governor.clauseVerb.verbMainPart = curLine.secondPart;
+						governor.clauseVerb.offset = curLine.secondOffset;
+						clauseMap.put(curLine.secondOffset, governor);
+					}
+		
+				}
+				//we should add the verb and the complement
+				else
+				{
+					curClause = new Clause();
+					// complement and verb will be added to the new clause
+					curClause.complement =curLine.firstPart;
+					curClause.complementOffset = curLine.firstOffset;
+					
+					curClause.clauseVerb.verbMainPart = curLine.secondPart;
+					curClause.clauseVerb.offset = curLine.secondOffset;
+					
+					clauseMap.put(curLine.firstOffset, curClause);
+					clauseMap.put(curLine.secondOffset, curClause);
+					
+				}
+			}
+//			toBeProcessesd.remove(i);	
+		}
+		
+//		xcomp, ccomp 
+		for(int i=0; i<toBeProcessesd.size();i++)
+		{
+			DependencyLine curLine = sentDepLines.get(i);
+			handleComp(curLine);

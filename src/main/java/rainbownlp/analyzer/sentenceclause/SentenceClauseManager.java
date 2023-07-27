@@ -243,3 +243,47 @@ private void analyzeSentence() throws Exception {
 		{
 			DependencyLine curLine = sentDepLines.get(i);
 			handleComp(curLine);
+//			toBeProcessesd.remove(i);
+		}
+//		for(DependencyLine curLine:sentDepLines)
+//		{
+//			handleComp(curLine);
+//		}
+
+//		for(DependencyLine curLine:sentDepLines)
+//		{
+//			handleVerbDependencies(curLine);
+//			handleNegation(curLine);
+//			handleModifiers(curLine);
+//			handleIobj(curLine);
+//			handleMarks(curLine);
+//		}
+		for(int i=0; i<toBeProcessesd.size();i++)
+		{
+			DependencyLine curLine = sentDepLines.get(i);
+			handleVerbDependencies(curLine);
+			handleNegation(curLine);
+			handleModifiers(curLine);
+			handleIobj(curLine);
+			handleMarks(curLine);
+//			toBeProcessesd.remove(i);
+		}
+	
+		for(int i=0; i<toBeProcessesd.size();i++)
+		{
+			DependencyLine curLine = sentDepLines.get(i);
+			handleNPClMod(curLine);
+		}
+		//add unique sentence clauses to clause
+		for (Clause c : clauseMap.values()) {
+			
+	       if (!clauses.contains(c) && c!= null) {
+	        	clauses.add(c);
+	       }
+	    }
+	}
+
+void handleComp(DependencyLine curLine) throws SQLException
+{
+	//“He says that you like to swim” ccomp(says, like) 
+	Artifact related_word = relatedSe

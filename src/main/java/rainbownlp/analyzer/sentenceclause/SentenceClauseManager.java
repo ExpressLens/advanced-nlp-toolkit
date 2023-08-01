@@ -286,4 +286,31 @@ private void analyzeSentence() throws Exception {
 void handleComp(DependencyLine curLine) throws SQLException
 {
 	//“He says that you like to swim” ccomp(says, like) 
-	Artifact related_word = relatedSe
+	Artifact related_word = relatedSentence.getChildByWordIndex(curLine.secondOffset-1);
+	String d_tag= related_word.getPOS();
+	
+	if(curLine.relationName.equals("ccomp")|| curLine.relationName.equals("xcomp"))
+	{
+		Clause governor_clause= clauseMap.get(curLine.firstOffset);
+		Clause dependent_clause = clauseMap.get(curLine.secondOffset);
+		if (clauseMap.containsKey(curLine.firstOffset)&&
+				clauseMap.containsKey(curLine.secondOffset))
+		{		
+			governor_clause.clauseComplements.add(dependent_clause);
+			dependent_clause.governer = governor_clause;
+		//	if (d_tag.startsWith("JJ"))
+		//	{
+		//		governor_clause.complement = curLine.secondPart;
+		//		governor_clause.complementOffset = curLine.secondOffset;
+				
+		//	}
+		}
+		else if (clauseMap.containsKey(curLine.firstOffset)&&
+				!clauseMap.containsKey(curLine.secondOffset))
+		{
+			dependent_clause = new Clause();
+
+			if (d_tag != null && d_tag.startsWith("VB"))
+			{
+				dependent_clause.clauseVerb.verbMainPart =curLine.secondPart;
+				dependent_clause.clauseVerb.offset =curLine.seco

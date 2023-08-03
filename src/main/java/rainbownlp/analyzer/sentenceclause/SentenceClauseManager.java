@@ -313,4 +313,40 @@ void handleComp(DependencyLine curLine) throws SQLException
 			if (d_tag != null && d_tag.startsWith("VB"))
 			{
 				dependent_clause.clauseVerb.verbMainPart =curLine.secondPart;
-				dependent_clause.clauseVerb.offset =curLine.seco
+				dependent_clause.clauseVerb.offset =curLine.secondOffset;
+				clauseMap.put(curLine.secondOffset, dependent_clause);
+				governor_clause.clauseComplements.add(dependent_clause);
+				dependent_clause.governer = governor_clause;
+			}
+//			if (d_tag.startsWith("JJ"))
+//			{
+//				governor_clause.complement = curLine.secondPart;
+//				governor_clause.complementOffset = curLine.secondOffset;
+//				
+//			}
+			
+				
+		}
+		else if (!clauseMap.containsKey(curLine.firstOffset)&&
+				clauseMap.containsKey(curLine.secondOffset))
+		{
+			governor_clause =  getGovernorVerbOrComplement(curLine);
+			ArrayList<Clause> cl_comps = new ArrayList<Clause>();
+			if (!governor_clause.clauseComplements.isEmpty())
+			{
+				cl_comps = governor_clause.clauseComplements;
+			}
+			cl_comps.add(dependent_clause);
+			governor_clause.clauseComplements = cl_comps;
+		}
+		else if (!clauseMap.containsKey(curLine.firstOffset)&&
+				!clauseMap.containsKey(curLine.secondOffset))
+		{
+			
+			//create both clauses and add
+			governor_clause =  getGovernorVerbOrComplement(curLine);
+			
+			dependent_clause = new Clause();
+			if (d_tag.startsWith("VB"))
+			{
+				dependent_clause.clau

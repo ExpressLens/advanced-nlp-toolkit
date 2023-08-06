@@ -349,4 +349,42 @@ void handleComp(DependencyLine curLine) throws SQLException
 			dependent_clause = new Clause();
 			if (d_tag.startsWith("VB"))
 			{
-				dependent_clause.clau
+				dependent_clause.clauseVerb.verbMainPart = curLine.secondPart;
+				dependent_clause.clauseVerb.offset = curLine.secondOffset;
+				clauseMap.put(curLine.secondOffset, dependent_clause);		
+			}
+//			else
+//			{
+//				dependent_clause.complement = curLine.secondPart;
+//				dependent_clause.complementOffset = curLine.secondOffset;
+//			}				
+//			clauseMap.put(curLine.secondOffset, dependent_clause);				
+		}
+		
+		
+	}
+	else
+	{
+		// throw exception
+	}
+}
+void handleVerbDependencies(DependencyLine depLine) throws SQLException
+{
+	if(depLine.relationName.equals("prt")|| depLine.relationName.equals("aux")
+			|| depLine.relationName.equals("auxpass"))
+	{
+		Clause governor_clause = getGovernorVerbOrComplement(depLine);
+		if(depLine.relationName.equals("aux") || depLine.relationName.equals("auxpass"))
+		{
+			governor_clause.clauseVerb.auxs.add(depLine.secondPart);
+			if (depLine.relationName.equals("auxpass"))
+			{
+				governor_clause.clauseVerb.isPassive = true;
+			}
+		}
+		else if(depLine.relationName.equals("prt"))
+		{
+			governor_clause.clauseVerb.prt = depLine.secondPart;
+		}
+
+		clauseMap.put(depLine.secon

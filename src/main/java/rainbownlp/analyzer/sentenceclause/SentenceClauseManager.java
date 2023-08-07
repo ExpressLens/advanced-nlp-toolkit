@@ -387,4 +387,45 @@ void handleVerbDependencies(DependencyLine depLine) throws SQLException
 			governor_clause.clauseVerb.prt = depLine.secondPart;
 		}
 
-		clauseMap.put(depLine.secon
+		clauseMap.put(depLine.secondOffset, governor_clause);
+	}
+}
+void handleNegation(DependencyLine depLine) throws SQLException
+{
+	
+	if(depLine.relationName.equals("neg"))
+	{
+		Clause governor  = getGovernorVerbOrComplement(depLine);
+		if (governor.clauseVerb.offset == depLine.firstOffset)
+		{
+			governor.clauseVerb.isNegated = true;
+		}	
+		governor.isNegated = true;
+		clauseMap.put(depLine.secondOffset, governor);
+	}
+	if(depLine.relationName.equals("det") && depLine.secondPart.equalsIgnoreCase("no") )
+	{
+		Clause governor  = clauseMap.get(depLine.firstOffset);
+		if (governor != null)
+		{
+			ArrayList<String> modifiers = new ArrayList<String>();
+			if (governor.modifierDepMap.containsKey(depLine.firstOffset))
+			{
+				modifiers = governor.modifierDepMap.get(depLine.firstOffset);
+			}
+			modifiers.add(depLine.secondPart);
+			governor.modifierDepMap.put(depLine.firstOffset,modifiers);
+			governor.isNegated = true;
+			clauseMap.put(depLine.secondOffset, governor);
+		}
+		else
+		{
+			phrases.add(depLine);
+		}
+		
+	}
+	
+}
+Clause getGovernorVerbOrComplement(DependencyLine depLine) throws SQLException
+{
+	Clause governor_clause = claus

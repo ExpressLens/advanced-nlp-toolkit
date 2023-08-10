@@ -459,4 +459,44 @@ Clause getGovernorVerbOrComplement(DependencyLine depLine) throws SQLException
 		else//TODO:it shoule be checked more
 		{
 			governor_clause.complement = depLine.firstPart;
-			governor_
+			governor_clause.complementOffset = depLine.firstOffset;
+		}
+		clauseMap.put(depLine.firstOffset, governor_clause);
+	}
+	
+	return governor_clause;
+}
+
+void handleModifiers(DependencyLine depLine) throws SQLException
+{
+	if (!(depLine.relationName.equals("amod")||
+			depLine.relationName.equals("advmod")
+			|| depLine.relationName.equals("dep")
+			|| depLine.relationName.equals("nn") 
+			|| depLine.relationName.equals("det")
+			|| depLine.relationName.equals("tmod")
+			|| depLine.relationName.equals("poss")
+			|| depLine.relationName.startsWith("prepc_")
+			|| depLine.relationName.startsWith("prep_")))
+	{
+		return;
+	}
+//	TODO: may nor working fine
+	if (depLine.relationName.startsWith("prep_"))
+	{
+		Artifact related_word =relatedSentence.getChildByWordIndex(depLine.firstOffset-1);
+		String gov_pos = related_word.getPOS();
+
+//		if (!gov_pos.startsWith("NN"))
+//		{
+//			return;
+//		}
+	}
+
+	Clause governor_cl = clauseMap.get(depLine.firstOffset);
+	Clause dependent_cl = clauseMap.get(depLine.secondOffset);
+
+	if (governor_cl == null)
+	{
+		//TODO: Find a solid solution....
+		//try to find

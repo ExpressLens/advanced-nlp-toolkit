@@ -428,4 +428,35 @@ void handleNegation(DependencyLine depLine) throws SQLException
 }
 Clause getGovernorVerbOrComplement(DependencyLine depLine) throws SQLException
 {
-	Clause governor_clause = claus
+	Clause governor_clause = clauseMap.get(depLine.firstOffset);
+	boolean create_new_required =false;
+	//if the governor is supposed to be verb but the content of existing is not equal
+	if (governor_clause != null)
+	{
+		Artifact related_word = relatedSentence.getChildByWordIndex(depLine.firstOffset-1);
+		String g_tag = related_word.getPOS();
+		if (g_tag!= null && (g_tag.startsWith("VB") || g_tag.startsWith("MD")))
+		{
+			if (governor_clause.clauseVerb.offset != depLine.firstOffset)
+			{
+				create_new_required =true;
+			}
+		}
+		
+	}
+	
+	if (governor_clause == null || create_new_required)
+	{
+		governor_clause  = new Clause();
+		Artifact related_word =relatedSentence.getChildByWordIndex(depLine.firstOffset-1);
+		String g_tag = related_word.getPOS();
+
+		if (g_tag!= null && (g_tag.startsWith("VB") || g_tag.startsWith("MD")))
+		{
+			governor_clause.clauseVerb.verbMainPart = depLine.firstPart;
+			governor_clause.clauseVerb.offset = depLine.firstOffset;
+		}
+		else//TODO:it shoule be checked more
+		{
+			governor_clause.complement = depLine.firstPart;
+			governor_

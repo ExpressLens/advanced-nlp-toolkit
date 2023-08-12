@@ -499,4 +499,43 @@ void handleModifiers(DependencyLine depLine) throws SQLException
 	if (governor_cl == null)
 	{
 		//TODO: Find a solid solution....
-		//try to find
+		//try to find the related clause of the current governor
+		List<DependencyLine> related_dep_lines = StanfordDependencyUtil.getAllGovernors(sentDepLines, depLine.firstPart);
+		for (DependencyLine rel_dep:related_dep_lines)
+		{
+			if(rel_dep.secondOffset==depLine.firstOffset)
+			{
+				governor_cl = clauseMap.get(rel_dep.firstOffset);
+				break;
+			}
+			
+		}
+		governor_cl = findMissingClause(depLine);
+		//if it is still not found
+		if (governor_cl==null)
+		{
+			phrases.add(depLine);
+		}
+		
+	}
+
+	if (governor_cl != null && governor_cl != null)
+	{
+		
+		ArrayList<String> modifiers = new ArrayList<String>();
+		if(governor_cl.modifierDepMap.containsKey(depLine.firstOffset))
+		{
+			modifiers =governor_cl.modifierDepMap.get(depLine.firstOffset);
+		}
+		modifiers.add(depLine.secondPart);
+
+		governor_cl.modifierDepMap.put(depLine.firstOffset, modifiers);
+		
+		if (depLine.relationName.equals("amod")||
+				depLine.relationName.equals("advmod")
+				|| depLine.relationName.equals("nn") )
+		{
+			governor_cl.adjModifierDepMap.put(depLine.firstOffset, modifiers);
+		}
+		if (dependent_cl==null)
+	

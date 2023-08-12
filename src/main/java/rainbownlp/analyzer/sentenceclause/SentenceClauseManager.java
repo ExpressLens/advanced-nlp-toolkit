@@ -538,4 +538,53 @@ void handleModifiers(DependencyLine depLine) throws SQLException
 			governor_cl.adjModifierDepMap.put(depLine.firstOffset, modifiers);
 		}
 		if (dependent_cl==null)
+		{
+			clauseMap.put(depLine.secondOffset, governor_cl);
+		}
+		
+	}
 	
+}
+void handleNPClMod(DependencyLine depLine) throws SQLException
+{
+	if (!(depLine.relationName.equals("infmod") || depLine.relationName.equals("rcmod")))
+	{
+		return;
+	}
+	Clause governor_cl = clauseMap.get(depLine.firstOffset);
+	Clause dependent_cl = clauseMap.get(depLine.secondOffset);
+	
+	if (governor_cl == null)
+	{
+		governor_cl = findMissingClause(depLine);
+		//if it is still not found
+		
+	}
+	if (governor_cl==null)
+	{
+		phrases.add(depLine);
+	}
+
+	else if ((dependent_cl != null && governor_cl !=dependent_cl))
+	{
+		governor_cl.clauseComplements.add(dependent_cl);
+		dependent_cl.governer = governor_cl;
+	}
+	else if (dependent_cl == null)
+	{
+		// try to build it
+		dependent_cl = buildDependentClause(depLine);
+		if (dependent_cl != null)
+		{
+			clauseMap.put(depLine.secondOffset, dependent_cl);
+			governor_cl.clauseComplements.add(dependent_cl);
+			dependent_cl.governer = governor_cl;
+		}
+		else//this should not happen
+		{
+			phrases.add(depLine);
+		}
+		
+	}
+	//they should be different
+	if (dependent_cl==governor_c

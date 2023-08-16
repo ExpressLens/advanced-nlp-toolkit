@@ -587,4 +587,40 @@ void handleNPClMod(DependencyLine depLine) throws SQLException
 		
 	}
 	//they should be different
-	if (dependent_cl==governor_c
+	if (dependent_cl==governor_cl)
+	{
+		//get all governors of the second part
+		List<DependencyLine> governing_dep_lines =
+			StanfordDependencyUtil.getAllGovernors(sentDepLines, depLine.firstPart, depLine.firstOffset);
+		// from there select other one if exist
+		for(DependencyLine dep:governing_dep_lines)
+		{
+			if(dep.relationName.equals("nsubj") || dep.relationName.equals("xsubj")||
+					dep.relationName.equals("dobj")|| 
+					dep.relationName.equals("iobj")||
+					dep.relationName.equals("nsubjpass")||
+					dep.relationName.equals("cop"))
+			{
+				//if it is different form the cottenr clause
+				if (dep.firstOffset != depLine.secondOffset)
+				{
+					Clause new_cl = clauseMap.get(dep.firstOffset);
+					if (new_cl!=null)
+					{
+						clauseMap.put(depLine.firstOffset, new_cl);
+						
+					}
+					
+				}
+			}
+		}
+	}
+}
+private Clause findMissingClause(DependencyLine depLine)
+{
+	Clause cl= null;
+	List<DependencyLine> related_dep_lines = StanfordDependencyUtil.getAllGovernors(sentDepLines, depLine.firstPart,depLine.firstOffset);
+	for (DependencyLine rel_dep:related_dep_lines)
+	{
+		
+		cl = clauseMap.get(rel_dep.f

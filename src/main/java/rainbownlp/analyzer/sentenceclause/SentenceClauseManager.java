@@ -659,3 +659,46 @@ void handleIobj(DependencyLine depLine) throws SQLException
 	}
 	// if governor is a noun it is handled in modifier
 	Artifact related_word =relatedSentence.getChildByWordIndex(depLine.firstOffset-1);
+	String gov_pos = related_word.getPOS();
+
+	if (gov_pos.startsWith("NN"))
+	{
+		return;
+	}
+	Clause gov_cl = clauseMap.get(depLine.firstOffset);
+	Clause dep_cl =  clauseMap.get(depLine.secondOffset);
+	if(gov_cl != null && dep_cl!= null )
+	{
+		SentenceObject indirect_object_cl = new SentenceObject();
+		indirect_object_cl.clause = dep_cl;
+		
+		gov_cl.clauseIObjPrep.put(indirect_object_cl,getPrep(depLine.relationName) );
+		gov_cl.clauseIObjs.add(depLine.secondPart);
+	}
+	else if (gov_cl != null && dep_cl== null)
+	{
+		SentenceObject indirect_object = new SentenceObject();
+		indirect_object.content = depLine.secondPart;
+		indirect_object.contentOffset = depLine.secondOffset;
+		
+		gov_cl.clauseIObjPrep.put(indirect_object,getPrep(depLine.relationName) );
+		gov_cl.clauseIObjs.add(depLine.secondPart);
+	}
+	else
+	{
+		phrases.add(depLine);
+	}
+
+}
+void handleMarks(DependencyLine depLine)
+{
+	if (!(depLine.relationName.equals("mark")))
+	{
+		return;
+	}
+	Clause gov_cl = clauseMap.get(depLine.firstOffset);
+	
+	if(gov_cl != null)
+	{
+		gov_cl.isMarked = true;
+		gov_cl.cla

@@ -623,4 +623,39 @@ private Clause findMissingClause(DependencyLine depLine)
 	for (DependencyLine rel_dep:related_dep_lines)
 	{
 		
-		cl = clauseMap.get(rel_dep.f
+		cl = clauseMap.get(rel_dep.firstOffset);
+		break;	
+	}
+	return cl;
+}
+//needs to be completed
+Clause buildDependentClause(DependencyLine depLine) throws SQLException
+{
+	Artifact related_word =relatedSentence.getChildByWordIndex(depLine.secondOffset-1);
+	String d_pos = related_word.getPOS();
+
+	Clause dependent_clause =null;
+	
+	if (d_pos != null && (d_pos.startsWith("VB") || d_pos.startsWith("MD")))
+	{
+		dependent_clause = new Clause();
+		dependent_clause.clauseVerb.verbMainPart = depLine.secondPart;
+		dependent_clause.clauseVerb.offset = depLine.secondOffset;
+	}
+	else if (d_pos != null && d_pos.startsWith("JJ") )
+	{
+		dependent_clause = new Clause();
+		dependent_clause.complement = depLine.secondPart;
+		dependent_clause.complementOffset = depLine.secondOffset;
+	}
+	return dependent_clause;
+}
+
+void handleIobj(DependencyLine depLine) throws SQLException
+{
+	if (!(depLine.relationName.startsWith("prep_")))
+	{
+		return;
+	}
+	// if governor is a noun it is handled in modifier
+	Artifact related_word =relatedSentence.getChildByWordIndex(depLine.firstOffset-1);

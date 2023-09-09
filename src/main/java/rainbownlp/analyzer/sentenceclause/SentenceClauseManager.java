@@ -701,4 +701,60 @@ void handleMarks(DependencyLine depLine)
 	if(gov_cl != null)
 	{
 		gov_cl.isMarked = true;
-		gov_cl.cla
+		gov_cl.clauseMark = depLine.secondPart;
+		clauseMap.put(depLine.secondOffset, gov_cl);
+	}
+
+	else
+	{
+		phrases.add(depLine);
+	}
+
+}
+public String getPrep(String rel_name)
+{
+	String prep = null;
+	Pattern p = Pattern.compile("prep_(\\w+)");
+	Matcher m = p.matcher(rel_name);
+	if(m.matches())
+	{
+		prep = m.group(1);
+	}
+	
+	return prep;
+}
+String getConj(String rel_name)
+{
+	String conj = null;
+	Pattern p = Pattern.compile("conj_(\\w+)");
+	Matcher m = p.matcher(rel_name);
+	if(m.matches())
+	{
+		conj = m.group(1);
+	}
+	
+	return conj;
+}
+void handleConjuction(DependencyLine depLine)
+{
+
+	if(!depLine.relationName.startsWith("conj_"))
+	{
+		return;
+	}
+	Clause dep_cl = clauseMap.get(depLine.secondOffset);
+	if (dep_cl != null)
+	{
+		dep_cl.conjuctedBut = true;
+	}
+	else
+	{
+		phrases.add(depLine);
+	}
+}
+//it gets an offset as input and returns next lemmatized tokens
+public ArrayList<String> getNextLemmaTokens(Integer offset,Integer token_count)
+{
+	ArrayList<String> next_tokens = new ArrayList<String>();
+	Integer sent_token_count = lemmaMap.size();
+	if (lemmaMap.containsKey(off

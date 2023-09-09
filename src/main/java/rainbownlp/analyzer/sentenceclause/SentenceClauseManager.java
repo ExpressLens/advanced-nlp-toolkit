@@ -757,4 +757,42 @@ public ArrayList<String> getNextLemmaTokens(Integer offset,Integer token_count)
 {
 	ArrayList<String> next_tokens = new ArrayList<String>();
 	Integer sent_token_count = lemmaMap.size();
-	if (lemmaMap.containsKey(off
+	if (lemmaMap.containsKey(offset))
+	{
+		for (int i = offset+1; i <= token_count+ offset && i<sent_token_count ; i++) {
+			if(lemmaMap.containsKey(i))
+			{
+				next_tokens.add(lemmaMap.get(i));
+			}
+		}
+	}
+	return next_tokens;
+}
+// it gets an offset as input and returns next lemmatized tokens
+public ArrayList<String> getPreviousLemmaTokens(Integer offset,Integer token_count)
+{
+	ArrayList<String> prev_tokens = new ArrayList<String>();
+	
+	if (lemmaMap.containsKey(offset))
+	{
+		for (int i = offset-1; i >= offset-token_count && i>=0 ; i--) {
+			if(lemmaMap.containsKey(i))
+			{
+				prev_tokens.add(lemmaMap.get(i));
+			}
+		}
+	}
+	return prev_tokens;
+}
+// it gets an offset as input and returns the around lemmatized tokens
+public ArrayList<String> getArroundLemmaTokens(Integer offset,Integer token_count)
+{
+	ArrayList<String> arround_tokens = new ArrayList<String>();
+	Integer sent_token_count = lemmaMap.size();
+	
+	if (lemmaMap.containsKey(offset))
+	{
+		for (int i = offset-1; i >= offset-token_count && i>=0 ; i--) {
+			if(lemmaMap.containsKey(i))
+			{
+				arround_tokens.add(lemmaMap.

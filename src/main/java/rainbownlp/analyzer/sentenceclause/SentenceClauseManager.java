@@ -859,4 +859,13 @@ public String getPOSTag(Integer offset)
 	}
 
 
-	public void setStanDependenciesSt
+	public void setStanDependenciesStr(String stanDependenciesStr) {
+		this.stanDependenciesStr = stanDependenciesStr;
+	}
+
+	public String getStanDependenciesStr() {
+		return stanDependenciesStr;
+	}
+
+
+}

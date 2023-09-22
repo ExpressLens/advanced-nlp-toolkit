@@ -795,4 +795,68 @@ public ArrayList<String> getArroundLemmaTokens(Integer offset,Integer token_coun
 		for (int i = offset-1; i >= offset-token_count && i>=0 ; i--) {
 			if(lemmaMap.containsKey(i))
 			{
-				arround_tokens.add(lemmaMap.
+				arround_tokens.add(lemmaMap.get(i));
+			}
+		}
+	}
+	if (lemmaMap.containsKey(offset))
+	{
+		for (int i = offset+1; i <= token_count+ offset && i<sent_token_count ; i++) {
+			if(lemmaMap.containsKey(i))
+			{
+				arround_tokens.add(lemmaMap.get(i));
+			}
+		}
+	}
+	return arround_tokens;
+}
+public String getPOSTag(Integer offset)
+{
+	if (offset <1)
+	{
+		return "missing";
+	}
+	String pos = posTags.split(" ")[offset-1].split("/")[1];
+	
+	return pos;
+}
+	
+	
+	
+	public ArrayList<Clause> getClauses() {
+		return clauses;
+	}
+	public String getContent() {
+		return getRelatedSentence().getContent();
+	}
+	
+
+	public SentenceClauseManager()  {
+	}
+
+	public void setRelatedSentence(Artifact relatedSentence) {
+		this.relatedSentence = relatedSentence;
+	}
+
+	public Artifact getRelatedSentence() {
+		return relatedSentence;
+	}
+
+	public void setSentContent(String sentContent) {
+		this.sentContent = sentContent;
+	}
+
+	public String getSentContent() {
+		return sentContent;
+	}
+
+	public void setPosTags(String posTags) {
+		this.posTags = posTags;
+	}
+
+	public String getPosTags() {
+		return posTags;
+	}
+
+
+	public void setStanDependenciesSt

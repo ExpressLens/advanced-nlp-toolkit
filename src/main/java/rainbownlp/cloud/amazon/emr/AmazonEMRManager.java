@@ -29,4 +29,15 @@ public class AmazonEMRManager {
 		AmazonElasticMapReduce client = new AmazonElasticMapReduceClient(credentials);
 
 		List<StepConfig> stepsConfig = new ArrayList<StepConfig>();
-		int 
+		int counter = 0;
+		for(HadoopJarStepConfig step : steps){
+			counter++;
+			stepsConfig.add(new StepConfig("Step"+counter, step));
+		}
+
+		AddJobFlowStepsResult result = client.addJobFlowSteps(new AddJobFlowStepsRequest()
+			.withJobFlowId("j-1HTE8WKS7SODR")
+			.withSteps(stepsConfig));
+		System.out.println(result.getStepIds());
+	}
+}

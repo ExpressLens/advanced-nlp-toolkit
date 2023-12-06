@@ -634,3 +634,135 @@ public class Artifact {
 				artifact_objects.get(0);
 	    }
 	    return artifact_obj;
+	}
+	public static List<Artifact> listByType(Type pArtifactType) {
+		String hql = "from Artifact where artifactType = "+pArtifactType.ordinal()
+				+" order by associatedFilePath";
+			
+		List<Artifact> artifact_objects = 
+				(List<Artifact>) HibernateUtil.executeReader(hql);
+		return artifact_objects;
+	}
+	public static List<Artifact> listByType(Type pSentenceType,boolean for_train) {
+		String file_path_pattern = "/train/";
+		if (!for_train)
+		{
+			file_path_pattern = "/test/";
+		}
+		String hql = "from Artifact where artifactType = "+pSentenceType.ordinal()
+				+"  and associatedFilePath like :pPattern order by associatedFilePath";
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pPattern", '%'+file_path_pattern+'%');
+		List<Artifact> artifact_objects = 
+				(List<Artifact>) HibernateUtil.executeReader(hql,params);
+		return artifact_objects;
+	}
+
+	public void setStanDependency(String stanDependency) {
+		this.stanDependency = stanDependency;
+	}
+	public String getStanDependency() {
+		return stanDependency;
+	}
+	public void setStanPennTree(String stanPennTree) {
+		this.stanPennTree = stanPennTree;
+	}
+	public String getStanPennTree() {
+		return stanPennTree;
+	}
+	@Transient
+	List<Artifact> children = null;
+	@Transient
+	public Artifact getChildByWordIndex(int word_index) {
+		if(children==null)
+			loadChildren();
+		Artifact foundArtifact = null;
+		for(Artifact art : children)
+			if(art.getWordIndex() == word_index)
+			{
+				foundArtifact = art;
+				break;
+			}
+		return foundArtifact;
+	}
+	private void loadChildren() {
+		String hql = "from Artifact where parentArtifact = "+getArtifactId();
+		
+		children = 
+				(List<Artifact>) HibernateUtil.executeReader(hql);
+	}
+	
+
+	/**
+	 * Find document artifact by filename
+	 * @param fileName
+	 * @return
+	 */
+	
+	public static Artifact findDocument(String fileName) {
+		String hql = "from Artifact where associatedFilePath like :associatedFilePath  and  artifactType=:artifactType ";
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("associatedFilePath", '%'+fileName);
+		params.put("artifactType", Type.Document.ordinal());
+		
+
+		List<Artifact> artifact_objects = 
+					(List<Artifact>) HibernateUtil.executeReader(hql, params);
+
+
+	    Artifact artifact_obj=null;
+	    if(artifact_objects.size()!=0)
+	    {
+	    	artifact_obj = 
+				artifact_objects.get(0);
+	    }
+	    return artifact_obj;
+	}
+	public String getArtifactOptionalCategory() {
+		return artifactOptionalCategory;
+	}
+	public void setArtifactOptionalCategory(String artifactOptionalCategory) {
+		this.artifactOptionalCategory = artifactOptionalCategory;
+	}
+	@Transient
+	public static List<Artifact> search(String query) {
+		String hql = "from Artifact where "+query;
+		
+		List<Artifact> artifact_objects = 
+					(List<Artifact>) HibernateUtil.executeReader(hql);
+
+	    return artifact_objects;
+	}
+	/**
+	 * Search by type and optional category and artifact filepath
+	 * @param passage
+	 * @param optionalCategory
+	 * @return
+	 */
+	public static List<Artifact> listByType(Type pArtifactType, String optionalCategory, String filePath) {
+		String hql = "from Artifact where artifactType = "+pArtifactType.ordinal()
+				+" and artifactOptionalCategory='"+optionalCategory+"' and associatedFilePath='"+filePath.replace("\\", "\\\\")+"'";
+			
+		List<Artifact> artifact_objects = 
+				(List<Artifact>) HibernateUtil.executeReader(hql);
+		return artifact_objects;
+	}
+	
+	/**
+	 * Search by type and optional category
+	 * @param passage
+	 * @param optionalCategory
+	 * @return
+	 */
+	public static List<Artifact> listByType(Type pArtifactType, String optionalCategory) {
+		String hql = "from Artifact where artifactType = "+pArtifactType.ordinal()
+				+" and artifactOptionalCategory='"+optionalCategory+"'";
+			
+		List<Artifact> artifact_objects = 
+				(List<Artifact>) HibernateUtil.executeReader(hql);
+		return artifact_objects;
+	}
+	
+	
+}

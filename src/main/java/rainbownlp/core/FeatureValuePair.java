@@ -89,4 +89,24 @@ public class FeatureValuePair {
 		SentenceDistance, TWOGram, TWOGramBackward, ThreeGram, ThreeGramBackward, NellLink, 
 		ProblemCountInSentence, TestCountInSentence, TreatmentCountInSentence, TestsBeforeWord, 
 		TreatmentsBeforeWord, ProblemsBeforeWord, ProblemPossibleCountInSentence, ProblemHypoCountInSentence, 
-		ProblemConditionalCountInSentence, ProblemAWSECountInSentence, ProblemAbsentCountInSentence
+		ProblemConditionalCountInSentence, ProblemAWSECountInSentence, ProblemAbsentCountInSentence, ProblemPresentCountInSentence, EdgeType,
+		WordWindowNext, WordWindowPre, EdgeParsePath, EdgeParseDistance, DependencyLinkedTokens,
+
+		TimexCount, ClinicalEventsCount, LinkWordBetween, LinkArgumentType, LinkFromPhrasePolarity, LinkFromPhraseModality, LinkFromPhraseType, LinkToPhraseModality, LinkToPhraseType, 
+		LinkToPhrasePolarity, LinkToPhraseTimexMod, LinkFromPhraseTimexMod, 
+		InterMentionLocationType, AreDirectlyConnected, HaveCommonGovernors, AreConjunctedAnd,
+		//NGrams
+		NonNormalizedNGram2, NonNormalizedNGram3, NorBetweenNGram2, NorBetweenNGram3, Link2GramBetween, 
+		Link2GramFrom,Link2GramTo,
+
+		//Link Args basic features
+		FromPhraseContent, ToPhraseContent, FromPhrasePOS, ToPhrasePOS,
+
+		LinkBetweenWordCount, LinkBetweenPhraseCount, 
+
+		//ParseDependency features
+		FromPhraseRelPrep, ToPhraseRelPrep, FromPhraseGovVerb, ToPhraseGovVerb,  FromPhraseGovVerbTense,
+		FromPhraseGovVerbAux, toPhraseGovVerbAux, areGovVerbsConnected,
+		normalizedDependencies,
+		//pattern statistics
+		POverlapGivenPattern, PBeforeGivenPattern, PAfterGivenPatt

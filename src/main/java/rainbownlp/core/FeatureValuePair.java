@@ -109,4 +109,39 @@ public class FeatureValuePair {
 		FromPhraseGovVerbAux, toPhraseGovVerbAux, areGovVerbsConnected,
 		normalizedDependencies,
 		//pattern statistics
-		POverlapGivenPattern, PBeforeGivenPattern, PAfterGivenPatt
+		POverlapGivenPattern, PBeforeGivenPattern, PAfterGivenPattern, PNoLinkGivenPattern, hasFeasibleLink, 
+		POverlapGivenPatternTTO, PBeforeGivenPatternTTO, PAfterGivenPatternTTO, PNoLinkGivenPatternTTO,
+		maxProbClassByPattern,
+
+		ParseTreePath, ParseTreePathSize,
+
+
+		//sectime features
+		relatedSectionInDoc, AdmissionOrDischarge, 
+		//normalized 
+		fromPrepArg, toPrepArg, isToPhDirectPrepArgOfFromPh, isEventAfterProblem, norToTypeDep,
+		fromToToPathExist, toToFromPathExist, fromToToPathSize, toToFromPathSize, customGraphPath,
+		//custom graph
+
+		LabeledGraphNorDepPath,  customGraphIndividualPath, customGraphPathString,
+
+
+		TemporalSignal, FromPhrasePOS1By1, ToPhrasePOS1By1, 
+		FromPhrasePOSWindowBefore, ToPhrasePOSWindowBefore,  
+		FromPhrasePOSWindowAfter, ToPhrasePOSWindowAfter, 
+		ToPhrasePOSBigramAfter, FromPhrasePOSBigramBefore,
+		ToPhrasePOSBigramBefore, FromToPhrasePOSBigram, LinkFromToWordDistance, LinkPOSBetween,
+
+
+		betweenChunck,
+
+
+
+
+	}
+
+	String featureName;
+	String featureValue;
+
+	//For string multi features this can be used to handle real value 
+	// othewise 1 or 0 would be used for values(for tf

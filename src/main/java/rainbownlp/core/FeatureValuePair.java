@@ -144,4 +144,56 @@ public class FeatureValuePair {
 	String featureValue;
 
 	//For string multi features this can be used to handle real value 
-	// othewise 1 or 0 would be used for values(for tf
+	// othewise 1 or 0 would be used for values(for tf_idfs)
+	private String featureValueAuxiliary;
+
+	private int featureValuePairId = -1;
+
+	//reset every time used for training a model;-1 means not used in training
+	private int tempFeatureIndex = -1;
+
+
+
+	public int getTempFeatureIndex() {
+		return tempFeatureIndex;
+	}
+	public void setTempFeatureIndex(int tempFeatureIndex) {
+		this.tempFeatureIndex = tempFeatureIndex;
+	}
+	public void setFeatureName(String _featureName) {
+		featureName = _featureName;
+	}
+	@NaturalId
+	public String getFeatureName() {
+		return featureName;
+	}
+
+
+	public void setFeatureValue(String _featureValue) {
+		featureValue = _featureValue;
+	}
+	@NaturalId
+	public String getFeatureValue() {
+		return featureValue;
+	}
+
+	public FeatureValuePair()
+	{
+
+	}
+
+
+
+	public void setFeatureValuePairId(int featureValuePairId) {
+		this.featureValuePairId = featureValuePairId;
+	}
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy = "increment")
+	public int getFeatureValuePairId() {
+		return featureValuePairId;
+	}
+
+
+	void setFeatureValueAuxiliary(String featureValueAuxiliary) {
+	

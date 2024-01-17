@@ -196,4 +196,44 @@ public class FeatureValuePair {
 
 
 	void setFeatureValueAuxiliary(String featureValueAuxiliary) {
-	
+		this.featureValueAuxiliary = featureValueAuxiliary;
+	}
+	@NaturalId
+	public String getFeatureValueAuxiliary() {
+		return featureValueAuxiliary;
+	}
+
+	@Override public String toString()
+	{
+		return featureName+" = "+ featureValue + 
+				" ("+featureValueAuxiliary+")";
+	}
+
+	@Override public boolean equals(Object pFeatureValuePair)
+	{
+		if(!(pFeatureValuePair instanceof FeatureValuePair))
+			return false;
+		FeatureValuePair fvp = (FeatureValuePair)pFeatureValuePair;
+		if(fvp.getFeatureValuePairId() == featureValuePairId ||
+				(fvp.getFeatureName() == featureName &&
+				fvp.getFeatureValue().equals(featureValue)&&
+				fvp.getFeatureValueAuxiliary() == featureValueAuxiliary))
+			return true;
+		else 
+			return false;
+
+	}
+	@Override public int hashCode()
+	{
+		return featureValuePairId;
+	}
+
+	public static synchronized FeatureValuePair getInstance(String pFeatureName, 
+			String pFeatureValue,
+			String pFeatureValueAuxiliary)
+	{
+		FeatureValuePair feature_value;
+
+
+		String hql = "from FeatureValuePair where featureName= :featureName "+
+				" AND featureValue= :featureValue 

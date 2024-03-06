@@ -236,4 +236,42 @@ public class FeatureValuePair {
 
 
 		String hql = "from FeatureValuePair where featureName= :featureName "+
-				" AND featureValue= :featureValue 
+				" AND featureValue= :featureValue ";
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("featureValue", pFeatureValue);
+		params.put("featureName", pFeatureName);
+
+		if(pFeatureValueAuxiliary!=null)
+		{
+			hql += " AND featureValueAuxiliary= :featureValueAuxiliary ";
+			params.put("featureValueAuxiliary", pFeatureValueAuxiliary);
+		}
+
+		List<FeatureValuePair> featurev_list = 
+				(List<FeatureValuePair>) HibernateUtil.executeReader(hql, params);
+
+		if(featurev_list.size() == 0)
+		{
+			feature_value = new FeatureValuePair();
+			feature_value.setFeatureName(pFeatureName);
+			feature_value.setFeatureValue(pFeatureValue);
+			if(pFeatureValueAuxiliary!=null)
+				feature_value.setFeatureValueAuxiliary(pFeatureValueAuxiliary);
+			HibernateUtil.save(feature_value);
+		}else
+			feature_value = featurev_list.get(0);
+		return feature_value;
+	}
+
+	public static FeatureValuePair getInstance(String pFeatureName, 
+			String pFeatureValue)
+	{
+
+		return getInstance(pFeatureName, pFeatureValue, null);
+	}
+
+	public static List<String> multiValueFeatures = new ArrayList<String>();
+	static
+	{
+		multi

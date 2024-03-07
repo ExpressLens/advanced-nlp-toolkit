@@ -274,4 +274,34 @@ public class FeatureValuePair {
 	public static List<String> multiValueFeatures = new ArrayList<String>();
 	static
 	{
-		multi
+		multiValueFeatures.add(FeatureName.MESHHeading.name());
+		multiValueFeatures.add(FeatureName.SentenceTFIDF.name());
+		multiValueFeatures.add(FeatureName.LinkWordBetween.name());
+	}
+	@Transient
+	//TODO make it better
+	public boolean isMultiValue()
+	{
+		boolean res = false;
+
+		if(multiValueFeatures.contains(featureName))
+			res = true;
+
+		return res;
+	}
+	public static void resetIndexes() {
+		resetIndexes(null, null);
+	}
+	/**
+	 * Assign new index to features and exclude the given features from indexing
+	 * @param excludedFeatures
+	 */
+	public static void resetIndexes(List<String> excludedFeatures, List<String> includeOnlyFeatures) {
+		String hql = "update FeatureValuePair set tempFeatureIndex = "+Integer.MAX_VALUE;
+		HibernateUtil.executeNonReader(hql, true);
+		Session temp_Session = HibernateUtil.sessionFactory.openSession();
+		String selecthql = "from FeatureValuePair order by featureName";
+
+
+		List<FeatureValuePair> features = 
+				(List<FeatureValuePair>) HibernateUtil.executeReader(selecthql,null,null, temp_Sessio

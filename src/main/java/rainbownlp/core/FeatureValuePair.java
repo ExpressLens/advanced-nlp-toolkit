@@ -304,4 +304,30 @@ public class FeatureValuePair {
 
 
 		List<FeatureValuePair> features = 
-				(List<FeatureValuePair>) HibernateUtil.executeReader(selecthql,null,null, temp_Sessio
+				(List<FeatureValuePair>) HibernateUtil.executeReader(selecthql,null,null, temp_Session);
+		int new_feature_index = 0;
+		int count =0;
+		int featureSize = features.size();
+		for(int i=0;i<featureSize;i++) {
+			count++;
+
+			FileUtil.logLine(null,"resetIndexes--------feature processed: "+count+"/"+features.size());
+			temp_Session = HibernateUtil.clearSession(temp_Session);
+
+			//load again fvp to get effect of bulk update
+			String selectfvp = "from FeatureValuePair where featureValuePairId = "+features.get(i).getFeatureValuePairId();
+
+			FeatureValuePair fvp  = 
+					((List<FeatureValuePair>) HibernateUtil.executeReader(selectfvp,null,null, temp_Session)).get(0);
+
+			int featureIndex = 
+					fvp.getTempFeatureIndex();
+			if(featureIndex==Integer.MAX_VALUE && 
+					(excludedFeatures==null || !excludedFeatures.contains(fvp.getFeatureName())) &&
+					(includeOnlyFeatures==null || includeOnlyFeatures.contains(fvp.getFeatureName())))
+			{//not indexed before and not excluded? then assign feature index
+				new_feature_index ++;
+				if(fvp.getFeatureValueAuxiliary()!=null)
+				{// separate feature index if it has auxiliary value
+					featureIndex = new_feature_index;
+					fv

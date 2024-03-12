@@ -357,4 +357,36 @@ public class FeatureValuePair {
 	}
 	public static int getMinIndexForAttribute(String attributeName) {
 		String hql = "select min(tempFeatureIndex) from FeatureValuePair where " +
-				"featureName='" 
+				"featureName='" + attributeName + "' and tempFeatureIndex>-1";
+		List res = HibernateUtil.executeReader(hql);
+		return (res.get(0)==null)?0:Integer.valueOf(res.get(0).toString());
+	}
+	public static FeatureValuePair getInstance(FeatureName linkType,
+			String pFeatureValue) {
+
+		return getInstance(linkType.name(), pFeatureValue);
+	}
+
+	public static FeatureValuePair getInstance(FeatureName linkType,
+			String pFeatureValue, String auxValue) {
+
+		return getInstance(linkType.name(), pFeatureValue, auxValue);
+	}
+	public static Integer getRelatedFromEventTypeFValuePairIds(
+			String pFeatureValue)
+	{
+		Integer feature_value_id =null;
+
+		//		String featureValueString = "";
+		//		for(String val: pFeatureValues)
+		//		{
+		//			featureValueString = featureValueString.concat(", '"+val+"'");
+		//		}
+		//		featureValueString = featureValueString.replaceFirst(",", "");
+
+		String hql = "from FeatureValuePair where featureName in ('LinkFromPhraseType') "+
+				" AND featureValue = '"+pFeatureValue+"' ";
+
+
+		List<FeatureValuePair> featurev_list = 
+				(List<FeatureValuePair>) Hibernate

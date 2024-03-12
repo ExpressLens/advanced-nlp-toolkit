@@ -330,4 +330,31 @@ public class FeatureValuePair {
 				if(fvp.getFeatureValueAuxiliary()!=null)
 				{// separate feature index if it has auxiliary value
 					featureIndex = new_feature_index;
-					fv
+					fvp.setTempFeatureIndex(featureIndex);
+					HibernateUtil.save(fvp, temp_Session);
+				}else
+				{
+					//feature index for attribute not set before
+					//find one for the attribute
+					featureIndex = new_feature_index;
+					String update_attribute_index_hql = 
+							"UPDATE FeatureValuePair set tempFeatureIndex = "+ featureIndex
+							+ " where featureName='"+fvp.getFeatureName()+"'";
+					HibernateUtil.executeNonReader(update_attribute_index_hql);
+				}
+			}
+		}
+		temp_Session.clear();
+		temp_Session.close();
+	}
+	public static int getMaxIndex() {
+		Session tmp_session = HibernateUtil.sessionFactory.openSession();
+		String hql = "select max(tempFeatureIndex) from FeatureValuePair where tempFeatureIndex<"+Integer.MAX_VALUE;
+		List res = HibernateUtil.executeReader(hql, null,null,tmp_session);
+		tmp_session.clear();
+		tmp_session.close();
+		return (res.get(0)==null)?0:Integer.valueOf(res.get(0).toString());
+	}
+	public static int getMinIndexForAttribute(String attributeName) {
+		String hql = "select min(tempFeatureIndex) from FeatureValuePair where " +
+				"featureName='" 

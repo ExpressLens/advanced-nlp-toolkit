@@ -389,4 +389,38 @@ public class FeatureValuePair {
 
 
 		List<FeatureValuePair> featurev_list = 
-				(List<FeatureValuePair>) Hibernate
+				(List<FeatureValuePair>) HibernateUtil.executeReader(hql);
+		if (featurev_list.size() !=0)
+		{
+			feature_value_id = featurev_list.get(0).getFeatureValuePairId();
+		}
+
+		return feature_value_id;
+	}
+	public static Integer getRelatedToEventTypeFValuePairIds(
+			String pFeatureValue)
+	{
+		Integer feature_value_id =null;
+
+		String hql = "from FeatureValuePair where featureName in ('LinkToPhraseType') "+
+				" AND featureValue ='"+pFeatureValue+"' ";
+
+
+		List<FeatureValuePair> featurev_list = 
+				(List<FeatureValuePair>) HibernateUtil.executeReader(hql);
+		if (featurev_list.size() !=0)
+		{
+			feature_value_id = featurev_list.get(0).getFeatureValuePairId();
+		}
+
+		return feature_value_id;
+	}
+	public static FeatureValuePair getInstance(String name, boolean booleanValue) {
+		return getInstance(name, (booleanValue?"1":"0"));
+	}
+	public static List<String> getAllFeatureNames() {
+		String hql = "from FeatureValuePair group by featureName";
+
+
+		List<FeatureValuePair> featurev_list = 	(List<FeatureValuePair>) HibernateUtil.executeReader(hql);
+		List<String

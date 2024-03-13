@@ -423,4 +423,20 @@ public class FeatureValuePair {
 
 
 		List<FeatureValuePair> featurev_list = 	(List<FeatureValuePair>) HibernateUtil.executeReader(hql);
-		List<String
+		List<String> featureNames = new ArrayList<String>();
+		for(FeatureValuePair fvp : featurev_list)
+			featureNames.add(fvp.getFeatureName());
+		return featureNames;
+	}
+	public static List<FeatureValuePair> getAllFeatures() {
+		String hql = "from FeatureValuePair group by featureName";
+
+
+		List<FeatureValuePair> featurev_list = 	(List<FeatureValuePair>) HibernateUtil.executeReader(hql);
+		return featurev_list;
+	}
+
+
+}
+
+

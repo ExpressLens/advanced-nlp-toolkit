@@ -70,4 +70,39 @@ public class PhraseLink implements Serializable  {
 		PhraseLink phraseLink_obj;
 	   
     	phraseLink_obj = new PhraseLink();
-    	phraseLink_obj.setFromPhrase(pfromPhra
+    	phraseLink_obj.setFromPhrase(pfromPhrase);
+    	phraseLink_obj.setToPhrase(pToPhrase);
+    	phraseLink_obj.setLinkType(LinkType.UNKNOWN);
+    	
+    	HibernateUtil.save(phraseLink_obj);
+    	
+    	FileUtil.logLine(null, "created link from phrase id="+ pfromPhrase.getPhraseId() + 
+    			"to id="+ pToPhrase.getPhraseId());
+	   
+	    return phraseLink_obj;
+	}
+	
+	
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy = "increment")
+	public int getPhraseLinkId() {
+		return PhraseLinkId;
+	}
+	public void setPhraseLinkId(int PhraseLinkId) {
+		this.PhraseLinkId = PhraseLinkId;
+	}
+	
+//	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name="fromPhrase")
+	public Phrase getFromPhrase() {
+		return fromPhrase;
+	}
+	public void setFromPhrase(Phrase firstPhrase) {
+		this.fromPhrase = firstPhrase;
+	}
+	
+//	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(

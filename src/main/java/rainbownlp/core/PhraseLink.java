@@ -105,4 +105,49 @@ public class PhraseLink implements Serializable  {
 	
 //	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
-    @JoinColumn(
+    @JoinColumn(name="toPhrase")
+	public Phrase getToPhrase() {
+		return toPhrase;
+	}
+	public void setToPhrase(Phrase secondPhrase) {
+		this.toPhrase = secondPhrase;
+	}
+	public LinkType getLinkType() {
+		return linkType;
+	}
+	public void setLinkType(LinkType pLinkType) {
+		this.linkType = pLinkType;
+	}
+	
+	public enum LinkType {
+		UNKNOWN(0),
+		BEFORE(1),
+		AFTER(2), 
+		OVERLAP(3);
+		
+		 private static final Map<Integer,LinkType> lookup 
+         = new HashMap<Integer,LinkType>();
+		static {
+	          for(LinkType l : EnumSet.allOf(LinkType.class))
+	               lookup.put(l.getCode(), l);
+	     }
+		
+		private int code;
+
+	     private LinkType(int code) {
+	          this.code = code;
+	     }
+
+	     public int getCode() { return code; }
+
+	     public static LinkType getEnum(int code) { 
+	          return lookup.get(code); 
+	     }	
+	     
+	}	
+	
+	
+	public static boolean sentenceHasLink(Artifact sentence) {
+		boolean hasLink =false;
+		
+		String hql = "from PhraseLink where fromPhrase.startArtifact

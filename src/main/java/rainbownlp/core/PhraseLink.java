@@ -179,4 +179,35 @@ public class PhraseLink implements Serializable  {
 		
 		return link_objects;
 	}
-	public static List<PhraseLink> findAllPhraseLinkInSent
+	public static List<PhraseLink> findAllPhraseLinkInSentence(Artifact sentence) {
+		String hql = "from PhraseLink where fromPhrase.startArtifact.parentArtifact = :sentId "+
+		" and toPhrase.endArtifact.parentArtifact= :sentId ";
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("sentId", sentence.getArtifactId());
+		
+		List<PhraseLink> link_objects = 
+		(List<PhraseLink>) HibernateUtil.executeReader(hql,params);
+		
+		return link_objects;
+	}
+
+@Transient
+String betweenContent = null;
+@Transient
+	public String getBetweenContent() {
+		if(betweenContent == null)
+		{
+			Artifact curArtifact = getFirstPhrase().getEndArtifact().getNextArtifact();
+			if(curArtifact == null) betweenContent = "<BETWEENSENTENCE>";
+			
+			Artifact to = getSecondPhrase().getStartArtifact();
+			if(betweenContent==null)
+			{
+				betweenContent = "";
+				while(curArtifact !=null && !curArtifact.equals(to)){
+					betweenContent += curArtifact.getContent() + " ";
+					curArtifact = curArtifact.getNextArtifact();
+				}
+				if(curArtifact==null) betweenContent="<BETWEENSENTENCE>";
+				else			
+					betweenContent = betw

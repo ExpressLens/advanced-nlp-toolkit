@@ -150,4 +150,33 @@ public class PhraseLink implements Serializable  {
 	public static boolean sentenceHasLink(Artifact sentence) {
 		boolean hasLink =false;
 		
-		String hql = "from PhraseLink where fromPhrase.startArtifact
+		String hql = "from PhraseLink where fromPhrase.startArtifact.parentArtifact = "+
+				sentence.getArtifactId()+" and linkType <> 0";
+		Session session = HibernateUtil.sessionFactory.openSession();
+			
+		List<PhraseLink> link_objects = 
+				(List<PhraseLink>) HibernateUtil.executeReader(hql, null, null, session);
+	    
+	    if(link_objects.size()!=0)
+	    	hasLink = true;
+	    
+		session.clear();
+		session.close();
+		return hasLink;
+	}
+
+
+	//This method will return all phraseLinks that in a sentence
+	public static List<PhraseLink> findPositivePhraseLinkInSentence(Artifact sentence, LinkType pExcludedLinkType) {
+		String hql = "from PhraseLink where fromPhrase.startArtifact.parentArtifact = :sentId "+
+		" and toPhrase.endArtifact.parentArtifact= :sentId  and linkType<> :pExcludedLinkType ";
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("sentId", sentence.getArtifactId());
+		params.put("pExcludedLinkType",pExcludedLinkType.ordinal());
+		
+		List<PhraseLink> link_objects = 
+		(List<PhraseLink>) HibernateUtil.executeReader(hql,params);
+		
+		return link_objects;
+	}
+	public static List<PhraseLink> findAllPhraseLinkInSent

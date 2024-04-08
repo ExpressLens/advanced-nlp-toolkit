@@ -259,4 +259,38 @@ public String getAltLinkID() {
 
 
 public static List<PhraseLink> findAllPhraseLinkInDocument(Artifact doc) {
-	String hql = "from PhraseLink where toPhrase.endArtifact.parentA
+	String hql = "from PhraseLink where toPhrase.endArtifact.parentArtifact.parentArtifact= :docId ";
+	HashMap<String, Object> params = new HashMap<String, Object>();
+	params.put("docId", doc.getArtifactId());
+	
+	List<PhraseLink> link_objects = 
+			(List<PhraseLink>) HibernateUtil.executeReader(hql,params);
+	
+	return link_objects;
+}
+public static String findLargestAltLinkId(String filePath,String altIdNameGroup)
+{
+	String largest_id = null;
+	String hql = "from PhraseLink where fromPhrase.startArtifact.associatedFilePath= :filePath " +
+			" and altLinkId like :altLinkIDGroup order by altLinkId desc ";
+	HashMap<String, Object> params = new HashMap<String, Object>();
+	params.put("filePath", filePath);
+	params.put("altLinkIDGroup", altIdNameGroup+'%');
+	
+	List<PhraseLink> link_objects = 
+		(List<PhraseLink>) HibernateUtil.executeReader(hql,params);
+	PhraseLink pl = null;
+	String altId = null;
+	
+	if (link_objects.get(0) != null)
+	{
+		pl = link_objects.get(0);
+		altId =  pl.getAltLinkID();
+		largest_id = altId.replaceAll(altIdNameGroup+"(\\d+)", "$1");
+	}
+	
+	
+	return largest_id;
+}
+public static List<PhraseLink> getPhraseLinkBetweenSent() {
+	String hql = "from Phras

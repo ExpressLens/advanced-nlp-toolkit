@@ -210,4 +210,53 @@ String betweenContent = null;
 				}
 				if(curArtifact==null) betweenContent="<BETWEENSENTENCE>";
 				else			
-					betweenContent = betw
+					betweenContent = betweenContent.trim();
+			}
+		}
+		return betweenContent;
+	}
+
+	
+	@Transient
+	public Phrase getFirstPhrase() {
+	if(toPhrase.getStartArtifact().getStartIndex()<
+			fromPhrase.getStartArtifact().getStartIndex())
+				return toPhrase;
+		else
+			return fromPhrase;
+	}
+
+@Transient
+	public Phrase getSecondPhrase() {
+		if(toPhrase.getStartArtifact().getStartIndex()<
+		fromPhrase.getStartArtifact().getStartIndex())
+			return fromPhrase;
+		else
+			return toPhrase;
+	}
+
+
+public boolean linkedWithAnotherPhraseInBetween() {
+	String hql = "from PhraseLink where fromPhrase = "+ fromPhrase.getPhraseId()+
+			" and toPhrase <> "+ toPhrase.getPhraseId()+" and toPhrase.startArtifact.startIndex < "
+			+ toPhrase.getStartArtifact().getStartIndex();
+	
+	List<PhraseLink> link_objects = 
+	(List<PhraseLink>) HibernateUtil.executeReader(hql);
+		
+	return link_objects.size()>0;
+}
+
+
+public void setAltLinkID(String altLinkID) {
+	this.altLinkID = altLinkID;
+}
+
+
+public String getAltLinkID() {
+	return altLinkID;
+}
+
+
+public static List<PhraseLink> findAllPhraseLinkInDocument(Artifact doc) {
+	String hql = "from PhraseLink where toPhrase.endArtifact.parentA

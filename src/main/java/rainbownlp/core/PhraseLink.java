@@ -293,4 +293,27 @@ public static String findLargestAltLinkId(String filePath,String altIdNameGroup)
 	return largest_id;
 }
 public static List<PhraseLink> getPhraseLinkBetweenSent() {
-	String hql = "from Phras
+	String hql = "from PhraseLink where " +
+			" fromPhrase.startArtifact.parentArtifact <>  toPhrase.startArtifact.parentArtifact " +
+			" and altLinkID is not null and altLinkID not like 'SECTIME%'" +
+			" order by fromPhrase.startArtifact.parentArtifact.parentArtifact";
+	List<PhraseLink> link_objects = 
+		(List<PhraseLink>) HibernateUtil.executeReader(hql);
+	return link_objects;
+}
+public static List<PhraseLink> getPhraseLinkBetweenSentByType(LinkType type) {
+	String hql = "from PhraseLink where " +
+			" fromPhrase.startArtifact.parentArtifact <>  toPhrase.startArtifact.parentArtifact " +
+			" and altLinkID is not null and altLinkID not like 'SECTIME%' " +
+			"and linkType ="+type.ordinal();
+	List<PhraseLink> link_objects = 
+		(List<PhraseLink>) HibernateUtil.executeReader(hql);
+	return link_objects;
+}
+
+
+public static PhraseLink getInstance(Artifact artifact1, Artifact artifact2) {
+	Phrase phrase1 = Phrase.getInstance(artifact1.getContent(), artifact1, artifact1);
+	Phrase phrase2 = Phrase.getInstance(artifact2.getContent(), artifact2, artifact2);
+	
+	ret

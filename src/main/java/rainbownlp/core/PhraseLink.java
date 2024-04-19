@@ -316,4 +316,32 @@ public static PhraseLink getInstance(Artifact artifact1, Artifact artifact2) {
 	Phrase phrase1 = Phrase.getInstance(artifact1.getContent(), artifact1, artifact1);
 	Phrase phrase2 = Phrase.getInstance(artifact2.getContent(), artifact2, artifact2);
 	
-	ret
+	return getInstance(phrase1, phrase2);
+}
+
+
+public static boolean sentencesLinked(Artifact sentence1, Artifact sentence2) {
+	String hql = "from PhraseLink where " +
+			" fromPhrase.startArtifact.parentArtifact = "+ sentence1.getArtifactId() +
+			" and toPhrase.startArtifact.parentArtifact = " + sentence2.getArtifactId() +
+			" and altLinkID is not null and altLinkID not like 'SECTIME%' ";
+	Session session = HibernateUtil.sessionFactory.openSession();
+	List<PhraseLink> link_objects = 
+		(List<PhraseLink>) HibernateUtil.executeReader(hql, null, null, session);
+	session.clear();
+	session.close();
+	return link_objects.size()>0?true:false;
+}
+
+public static PhraseLink findPhraseLink(Phrase pfromPhrase, Phrase pToPhrase){
+	String hql = "from PhraseLink where fromPhrase = "+
+		pfromPhrase.getPhraseId()+" and toPhrase="+pToPhrase.getPhraseId();
+	
+	List<PhraseLink> link_objects = 
+			(List<PhraseLink>) HibernateUtil.executeReader(hql);
+    
+    
+	PhraseLink phraseLink_obj = null;
+    if(link_objects.size()!=0)
+    {
+    	phraseLink_obj = link

@@ -385,4 +385,33 @@ public boolean isLeftToRight() {
 }
 
 
-public void setLinkTypeReal(Li
+public void setLinkTypeReal(LinkType linkTypeReal) {
+	this.linkTypeReal = linkTypeReal;
+}
+
+
+public LinkType getLinkTypeReal() {
+	return linkTypeReal;
+}
+
+
+public void setLinkTypeClosure(LinkType linkTypeClosure) {
+	this.linkTypeClosure = linkTypeClosure;
+}
+
+
+public LinkType getLinkTypeClosure() {
+	return linkTypeClosure;
+}
+
+
+public void setLinkTypeIntegrated(LinkType linkTypeIntegrated) {
+	this.linkTypeIntegrated = linkTypeIntegrated;
+}
+
+
+public LinkType getLinkTypeIntegrated() {
+	return linkTypeIntegrated;
+}
+	
+}

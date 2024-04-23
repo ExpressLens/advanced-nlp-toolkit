@@ -344,4 +344,45 @@ public static PhraseLink findPhraseLink(Phrase pfromPhrase, Phrase pToPhrase){
 	PhraseLink phraseLink_obj = null;
     if(link_objects.size()!=0)
     {
-    	phraseLink_obj = link
+    	phraseLink_obj = link_objects.get(0);
+    	
+    }
+    return phraseLink_obj;
+}
+public static PhraseLink findPhraseLinkForExamples(Phrase pfromPhrase, Phrase pToPhrase){
+	String hql = "from PhraseLink where forTrain is null and fromPhrase = "+
+		pfromPhrase.getPhraseId()+" and toPhrase="+pToPhrase.getPhraseId();
+	
+	List<PhraseLink> link_objects = 
+			(List<PhraseLink>) HibernateUtil.executeReader(hql);
+    
+    
+	PhraseLink phraseLink_obj = null;
+    if(link_objects.size()!=0)
+    {
+    	phraseLink_obj = link_objects.get(0);
+    	
+    }
+//    else
+//    {
+//    	String hql2 = "from PhraseLink where fromPhrase = "+
+//    	pToPhrase.getPhraseId()+" and toPhrase="+pfromPhrase.getPhraseId();
+//	
+//    	link_objects = 
+//			(List<PhraseLink>) HibernateUtil.executeReader(hql);
+//    	if(link_objects.size()!=0)
+//        {
+//        	phraseLink_obj = link_objects.get(0);
+//        	
+//        }
+//    }
+    return phraseLink_obj;
+}
+@Transient
+public boolean isLeftToRight() {
+	
+	return getFirstPhrase().equals(fromPhrase);
+}
+
+
+public void setLinkTypeReal(Li

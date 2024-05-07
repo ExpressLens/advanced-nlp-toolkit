@@ -56,4 +56,32 @@ public class RainbowEngine {
 	}
 	
 	/**
-	 * 
+	 * Create example on the latest documents loaded by readInput and apply trained model
+	 * @param exampleBuilder
+	 * @param learner
+	 * @return
+	 * @throws Exception
+	 */
+	public IEvaluationResult test(IMLExampleBuilder exampleBuilder, LearnerEngine learner) throws Exception{
+		testExamplesInPipe = exampleBuilder.getExamples(DatasetType.TEST_SET.name());
+		learner.test(testExamplesInPipe);
+		return Evaluator.getEvaluationResult(testExamplesInPipe);
+	}
+	
+	/**
+	 * Perform classfold validation on the trainset. trainset must be loaded before calling this method with readInput
+	 * @param cfValidator
+	 * @param exampleBuilder
+	 * @param folds
+	 * @return
+	 * @throws Exception
+	 */
+	public IEvaluationResult crossValidate(ICrossfoldValidator cfValidator, IMLExampleBuilder exampleBuilder, int folds) throws Exception{
+		if(trainExamplesInPipe == null)
+			trainExamplesInPipe = exampleBuilder.getExamples(DatasetType.TRAIN_SET.name());
+		return cfValidator.crossValidation(trainExamplesInPipe, folds);
+	}
+	
+	
+	
+}

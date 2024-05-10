@@ -30,4 +30,33 @@ public class Setting {
 	public static Double SVMPolyCParameter;
 	public static enum SVMKernels  {
 		  Linear, //0: linear (default)
-        Polynomial, /
+        Polynomial, //1: polynomial (s a*b+c)^d
+        Radial, //2: radial basis function exp(-gamma ||a-b||^2)
+        SigmoidTanh //3: sigmoid tanh(s a*b + c)
+	};
+	public static SVMKernels SVMKernel;
+
+	public static boolean batchMode = false;
+	public static int crossValidationFold;
+	public static int crossFoldCurrent = 0;
+	
+//	public static String[] getClasses()
+//	{
+//		String[] classes = getValue("classes").split("|");
+//		return classes;
+//	}
+	public static void init()
+	{
+		if(configFile == null){
+			  configFile = new Properties();
+			try {
+				InputStream config_file = Setting.class.getClassLoader().getResourceAsStream("configuration.conf");//
+					//Configuration.class.getClassLoader().getResourceAsStream("/configuration.properties");
+				configFile.load(config_file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			MinInstancePerLeaf = Integer.parseInt(configFile.getProperty("MinInstancePerLeaf"));
+			SVMCostParameter = Double.parseDouble(configFile.getProperty("SVMCostParameter"));
+			SVMPolyCParameter = Double.parseD

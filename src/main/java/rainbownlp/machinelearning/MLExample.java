@@ -461,3 +461,288 @@ public class MLExample  implements Serializable {
 //		}
 //		from_fvpIds = from_fvpIds.replaceFirst(",", "");
 //		
+//
+//		String to_fvpIds = "";
+//		for(Integer id: toTeatureValuePairIds)
+//		{
+//			to_fvpIds = to_fvpIds.concat(", '"+id+"'");
+//		}
+//		to_fvpIds = to_fvpIds.replaceFirst(",", "");
+		
+		String hql = " FROM MLExample m  "  +
+	    "where (( exists (from MLExampleFeature f where m.exampleId =f.relatedExample and featureValuePair in ("+type1_from_fvpIds+"))" +
+	    " and exists (from MLExampleFeature f where m.exampleId =f.relatedExample and featureValuePair in ("+type2_to_fvpIds+"))) or" +
+	    " (exists (from MLExampleFeature f where m.exampleId =f.relatedExample and featureValuePair in ("+type2_from_fvpIds+")) and " +
+	    		"exists (from MLExampleFeature f where m.exampleId =f.relatedExample and featureValuePair in ("+type1_to_fvpIds+")))) " +
+	    " and corpusName =:corpusName " +
+	    " and forTrain="+(for_train?1:0) +" and " +
+	      "associatedFilePath in (" +
+	      docPaths + ") " +
+      "order by associatedFilePath desc";
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("corpusName", experimentgroup);
+		
+		return getExamplesList(hql, params);
+	}
+	public static List<MLExample> getLastExamplesByDocument(String experimentgroup, 
+			boolean for_train, int num_of_documents)
+	{
+		List<Artifact> docs = Artifact.listByType(Type.Document,for_train);
+		if(docs.size()<num_of_documents)
+			num_of_documents = docs.size();
+		
+		String docPaths = "";
+		for(int i=docs.size()-1;i>docs.size()-num_of_documents-1;i--)
+			docPaths = docPaths.concat(", '"+docs.get(i).getAssociatedFilePath()+"'");
+		docPaths = docPaths.replaceFirst(",", "");
+		
+		String hql = "FROM MLExample "  +
+				"where corpusName =:corpusName " +
+				" and forTrain="+(for_train?1:0) +" and associatedFilePath in (" +
+						docPaths + ") " +
+						"order by associatedFilePath desc";
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("corpusName", experimentgroup);
+		
+		return getExamplesList(hql, params);
+	}
+
+	@Override
+	public MLExample clone()
+	{
+		if(relatedArtifact!=null)
+			return getInstanceForArtifact(relatedArtifact, corpusName);
+		else
+			return getInstanceForLink(relatedPhraseLink, corpusName);	}
+
+
+	
+	public static void resetExamplesPredicted(String experimentgroup, boolean for_train) {
+		String hql = "update MLExample set predictedClass = -1 where corpusName = '"+
+				experimentgroup+"' and forTrain="+(for_train?1:0);
+		HibernateUtil.executeNonReader(hql);
+	}
+	public static void setExamplePredictedClass(int example_id, int predicted) {
+		String hql = "update MLExample set predictedClass = "+predicted+" where exampleId="+example_id;
+		HibernateUtil.executeNonReader(hql);
+	}
+	public static void resetExamplesPredictedToDefault(String experimentgroup, boolean for_train, int default_predicted) {
+		String hql = "update MLExample set predictedClass = "+default_predicted+" where corpusName = '"+
+				experimentgroup+"' and forTrain="+(for_train?1:0);
+		HibernateUtil.executeNonReader(hql);
+	}
+
+	public void setAssociatedFilePath(String associatedFilePath) {
+		this.associatedFilePath = associatedFilePath;
+	}
+
+	public String getAssociatedFilePath() {
+		return associatedFilePath;
+	}
+	public static void updateAssociatedFilePath() {
+		String hql = "from MLExample ";
+		Session tempSession = HibernateUtil.sessionFactory.openSession();
+		List<MLExample> examples = 
+				(List<MLExample>) HibernateUtil.executeReader(hql, null,null, tempSession);
+		
+		for (MLExample example: examples)
+		{
+			PhraseLink related_phrase_link = example.getRelatedPhraseLink();
+			Phrase from_phrase = related_phrase_link.getFromPhrase();
+			Artifact start_artifact = from_phrase.getStartArtifact();
+			
+			String file_path = start_artifact.getAssociatedFilePath();
+			example.setAssociatedFilePath(file_path);
+			HibernateUtil.save(example, tempSession);
+			
+		}
+		tempSession.clear();
+		tempSession.close();
+	}
+
+	public static MLExample findInstance(PhraseLink phrase_link,
+			String experimentgroup) {
+		String hql = "from MLExample where relatedPhraseLink = "+
+				phrase_link.getPhraseLinkId() + " and corpusName = '"+
+						experimentgroup+"'";
+			List<MLExample> example_objects = 
+					getExamplesList(hql);
+		    
+			MLExample example_obj=null;
+		    if(example_objects.size()!=0)
+		    {
+		    	example_obj = 
+		    			example_objects.get(0);
+		    }
+		    return example_obj;
+	}
+	public static MLExample findInstance(PhraseLink phrase_link) {
+		String hql = "from MLExample where relatedPhraseLink = "+
+				phrase_link.getPhraseLinkId();
+		
+			List<MLExample> example_objects = 
+					getExamplesList(hql);
+		    
+			MLExample example_obj=null;
+		    if(example_objects.size()!=0)
+		    {
+		    	example_obj = 
+		    			example_objects.get(0);
+		    }
+		    return example_obj;
+	}
+	
+	public static List<MLExample> getDecidedExamplesForGraph(Artifact p_sentence) {
+		String hql = "from MLExample where predictedClass <> -1 " +
+				"and relatedPhraseLink.fromPhrase.startArtifact.parentArtifact = "+
+		p_sentence.getArtifactId()+" and relatedPhraseLink.toPhrase.startArtifact.parentArtifact = "+
+		p_sentence.getArtifactId();
+
+		List<MLExample> example_objects = 
+				getExamplesList(hql);
+	    
+	    return example_objects;
+	}
+
+	/**
+	 * Get Artifact-RelatedConcept example. 
+	 * This example is suitable to classify artifacts into unknown set of classes, use linkedConcept to store class
+	 * For example finding whether a sentence is evidence for an specific gene, pass the sentence artifact and the gene as linkedConcept
+	 * @param artifact
+	 * @param linkedConcept
+	 * @param experimentGroup
+	 * @return
+	 */
+	public static MLExample getInstance(Artifact artifact, String linkedConcept,
+			String experimentGroup) {
+		String hql = "from MLExample where relatedArtifact = "+
+				artifact.getArtifactId() + " and relatedConcept = :relatedConcept " +  
+				" and corpusName = :corpusName";
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("relatedConcept", linkedConcept);
+		params.put("corpusName", experimentGroup);
+		
+			List<MLExample> example_objects = 
+					getExamplesList(hql, params);
+		    
+			MLExample example_obj;
+		    if(example_objects.size()==0)
+		    {
+		    	example_obj = new MLExample();
+		  
+		    	
+		    	example_obj.setCorpusName(experimentGroup);
+		    	example_obj.setRelatedArtifact(artifact);
+		    	example_obj.setRelatedConcept(linkedConcept);
+		    	example_obj.setAssociatedFilePath(artifact.getAssociatedFilePath());
+		    	
+		    	if(ConfigurationUtil.SaveInGetInstance)
+			    	saveExample(example_obj);
+		    }else
+		    {
+		    	example_obj = example_objects.get(0);
+		    }
+		    return example_obj;
+	}
+
+
+	public void setPredictionWeight(double predictionWeight) {
+		this.predictionWeight = predictionWeight;
+	}
+
+	public double getPredictionWeight() {
+		return predictionWeight;
+	}
+
+
+	public void setExpectedReal(int expectedReal) {
+		this.expectedReal = expectedReal;
+	}
+
+	public int getExpectedReal() {
+		return expectedReal;
+	}
+
+	public void setExpectedClosure(int expectedClosure) {
+		this.expectedClosure = expectedClosure;
+	}
+
+	public int getExpectedClosure() {
+		return expectedClosure;
+	}
+
+	public void setExpectedIntegrated(int expectedIntegrated) {
+		this.expectedIntegrated = expectedIntegrated;
+	}
+
+	public int getExpectedIntegrated() {
+		return expectedIntegrated;
+	}
+
+	public String getRelatedConcept() {
+		return relatedConcept;
+	}
+
+	public void setRelatedConcept(String relatedConcept) {
+		this.relatedConcept = relatedConcept;
+	}
+
+	public static void deleteAllExamples(String experimentgroup) {
+		String hql = "delete from MLExample where corpusName = '"+
+				experimentgroup+"'";
+		HibernateUtil.executeNonReader(hql, true);
+	}
+
+	public static MLExample findInstance(Artifact artifact, String linkedConcept) {
+		String hql = "from MLExample where relatedArtifact = "+
+				artifact.getArtifactId() + " and relatedConcept = :relatedConcept ";
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("relatedConcept", linkedConcept);
+		
+			List<MLExample> example_objects = 
+					getExamplesList(hql, params);
+		    
+			MLExample example_obj = null;
+		    if(example_objects.size()!=0)
+		    {
+		    	example_obj = example_objects.get(0);
+		    }
+		    return example_obj;
+	}
+
+	public void setExpectedClassOptionalCategory(
+			String expectedClassOptionalCategory) {
+		this.expectedClassOptionalCategory = expectedClassOptionalCategory;
+	}
+
+	public String getExpectedClassOptionalCategory() {
+		return expectedClassOptionalCategory;
+	}
+
+	public void setPredictedClassOptionalCategory(
+			String predictedClassOptionalCategory) {
+		this.predictedClassOptionalCategory = predictedClassOptionalCategory;
+	}
+
+	public String getPredictedClassOptionalCategory() {
+		return predictedClassOptionalCategory;
+	}
+
+	public static List<MLExample> getAllExamples(String pathLike) {
+		String hql = "from MLExample where associatedFilePath like '%"+
+				pathLike+"%' order by exampleId";
+		return getExamplesList(hql);
+	}
+
+	@Transient
+	public Double getNumericExpectedClass() {
+		return Double.parseDouble(expectedClass);
+	}
+
+	@Transient
+	public Double getNumericPredictedClass() {
+		return Double.parseDouble(predictedClass);
+	}
+}

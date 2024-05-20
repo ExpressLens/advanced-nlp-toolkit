@@ -25,4 +25,21 @@ public class SVMLightRegression extends SVMLightBasedLearnerEngine {
 		String myShellScript = 
 				ConfigurationUtil.getValue("SVMLightLearnerPath")
 					+ " -z r -t " +ConfigurationUtil.getValue("SVMKernel")
-//					+ " -c " +Configurati
+//					+ " -c " +ConfigurationUtil.getValue("SVMMultiC")
+					+" " + trainFile + " " + getModelFilePath();
+		return myShellScript;
+	}
+
+	@Override
+	protected String getTestCommand(String resultFile) {
+		String myShellScript = 
+				ConfigurationUtil.getValue("SVMLightClassifierPath") + " "
+						+ testFile + " " + modelFile +
+						" " + resultFile;
+
+		return myShellScript;
+	}
+
+
+
+}

@@ -22,4 +22,14 @@ public abstract class MultiThreadedFeature extends Thread implements IFeatureCal
 			try {
 				calculateFeatures(example);
 			} catch (SQLException e) {
-				
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter++;
+			FileUtil.logLine(null, "Processed : "+counter +"/"+examples.size());
+		}
+	}
+}

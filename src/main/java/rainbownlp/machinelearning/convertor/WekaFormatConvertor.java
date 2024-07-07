@@ -39,4 +39,30 @@ public class WekaFormatConvertor {
 	    FastVector atts = new FastVector();
     	for(int i=0;i<fvps.size();i++){
     		FeatureValuePair fvp = fvps.get(i);
-	    	if(fvp.getFeatureValu
+	    	if(fvp.getFeatureValueAuxiliary()==null)
+	    		atts.addElement(new Attribute(fvp.getFeatureName()));
+	    	else
+	    		atts.addElement(new Attribute(fvp.getFeatureName()+fvp.getFeatureValue()));
+	    }
+    	
+    	 FastVector classVals = new FastVector();
+    	 for (int i = 0; i < possibleClasses.length; i++)
+    	      classVals.addElement(possibleClasses[i]);
+    	 atts.addElement(new Attribute("class", classVals));
+    	
+	    Instances data = new Instances(taskName, atts, 0);
+	    FileOutputStream file_writer = new FileOutputStream(filePath);
+		ArffSaver saver = new ArffSaver();
+	    saver.setDestination(file_writer);
+	    saver.setRetrieval(Saver.INCREMENTAL);
+	    saver.setStructure(data);
+	    for(Integer example_id : exampleIdsToWrite) {
+	    	counter++;
+	    	MLExample example = MLExample.getExampleById(example_id);
+	    	if(example.getExpectedClass() == null){
+	    		FileUtil.logLine(FileUtil.DEBUG_FILE, "expected class is null!");
+	    		continue;
+	    	}
+	    	Double expectedClass = example.getNumericExpectedClass()+1;
+	    	// create instance
+	    	double[] vals = new double[f

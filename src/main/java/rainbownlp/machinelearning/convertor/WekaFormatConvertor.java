@@ -89,4 +89,12 @@ public class WekaFormatConvertor {
 	    	instance.setDataset(data);
 //	    	data.add(instance);
 	    	saver.writeIncremental(instance);
-	    	Fi
+	    	FileUtil.logLine(null, "example processed: "+counter+"/"+exampleIdsToWrite.size());
+	    	if(counter%100==0)
+	    		file_writer.flush();
+	    }
+		file_writer.flush();
+		file_writer.close();
+	}
+
+}

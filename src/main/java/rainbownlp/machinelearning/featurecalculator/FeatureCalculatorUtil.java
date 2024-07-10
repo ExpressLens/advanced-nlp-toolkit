@@ -43,4 +43,14 @@ public class FeatureCalculatorUtil {
 			
 			curInclusiveString += "_" + curContent;
 			String jumpString = endArtifact.getContent() + "_" + curContent;
-			curArtifact = curA
+			curArtifact = curArtifact.getNextArtifact();
+			stepRemained--;
+			
+			ngrams.add(curInclusiveString);
+			ngrams.add(jumpString);
+		}
+		
+		return ngrams;
+	}
+
+}

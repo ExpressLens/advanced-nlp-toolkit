@@ -26,4 +26,35 @@ public class ConceptsBetweenWords implements IFeatureCalculator {
 //		MLExample.getAllExamples(LinkExampleBuilder.ExperimentGroupTimexEvent, true);
 //		List<MLExample> trainExamples2 = 
 //			MLExample.getAllExamples(LinkExampleBuilder.ExperimentGroupEventEvent, true);
-//		List<MLExample> all_train_examples = 
+//		List<MLExample> all_train_examples = new ArrayList<MLExample>();
+//		all_train_examples.addAll(trainExamples);
+//		all_train_examples.addAll(trainExamples2);
+//		
+//		for ( MLExample example_to_process: all_train_examples )
+//		{
+//			ConceptsBetweenWords n_grams =  new ConceptsBetweenWords();
+//			
+//			n_grams.calculateFeatures(example_to_process);
+//		}
+	}
+	
+		@Override
+	public void calculateFeatures(MLExample exampleToProcess) {
+			
+			PhraseLink phraseLink = exampleToProcess.getRelatedPhraseLink();
+			Phrase phrase1 = phraseLink.getFirstPhrase();
+			Phrase phrase2 = phraseLink.getSecondPhrase();
+			
+			Artifact curArtifact = phrase1.getEndArtifact().getNextArtifact();
+			Artifact toArtifact = phrase2.getStartArtifact();
+			Integer count_words_between=0;
+			
+			while(curArtifact!=null && 
+					!curArtifact.equals(toArtifact))
+			{
+				String curContent = curArtifact.getContent();
+				FeatureValuePair wordBetweenFeature = FeatureValuePair.getInstance(
+						FeatureName.LinkWordBetween, 
+						curContent, "1");
+				
+				MLExampleFeature.setFeatureExample(exampleToProcess, wordBetweenFeature);

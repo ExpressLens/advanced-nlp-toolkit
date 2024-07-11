@@ -87,4 +87,32 @@ public class ConceptsBetweenWords implements IFeatureCalculator {
 //				MLExampleFeature.setFeatureExample(exampleToProcess, ngramFeature);
 //			}
 	
-//			if(phrase1.getStart
+//			if(phrase1.getStartArtifact().getPreviousArtifact()!=null)
+//			{
+//				FeatureValuePair ngramFeature = FeatureValuePair.getInstance(
+//						FeatureName.Link2GramFrom, 
+//						phrase1.getStartArtifact().getPreviousArtifact().getContent()
+//						+"_"+phrase1_content, "1");
+//				
+//				MLExampleFeature.setFeatureExample(exampleToProcess, ngramFeature);
+//			}
+				
+			
+//			String phrase2_content = phrase2.getPhraseContent().replace(" ", "_");
+//			if(phrase2.getEndArtifact().getNextArtifact()!=null)
+//			{
+//				FeatureValuePair ngramFeature = FeatureValuePair.getInstance(
+//						FeatureName.Link2GramTo, 
+//						phrase2_content+"_"+phrase2.getEndArtifact().getNextArtifact().getContent(), "1");
+//				
+//				MLExampleFeature.setFeatureExample(exampleToProcess, ngramFeature);
+//			}
+//	
+//			if(phrase2.getStartArtifact().getPreviousArtifact()!=null)
+//			{
+//				FeatureValuePair ngramFeature = FeatureValuePair.getInstance(
+//						FeatureName.Link2GramTo, 
+//						phrase2.getStartArtifact().getPreviousArtifact().getContent()
+//						+"_"+phrase2_content, "1");
+//				
+//				MLExampleFeature.setFeatureExample(exampleTo

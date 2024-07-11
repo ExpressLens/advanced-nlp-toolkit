@@ -58,3 +58,33 @@ public class ConceptsBetweenWords implements IFeatureCalculator {
 						curContent, "1");
 				
 				MLExampleFeature.setFeatureExample(exampleToProcess, wordBetweenFeature);
+
+				curArtifact = curArtifact.getNextArtifact();
+				count_words_between++;
+//				if(curArtifact!=null)
+//				{
+//					FeatureValuePair ngramBetweenFeature = FeatureValuePair.getInstance(
+//							FeatureName.Link2GramBetween, 
+//							curContent+"_"+curArtifact.getContent(), "1");
+//					
+//					MLExampleFeature.setFeatureExample(exampleToProcess, ngramBetweenFeature);
+//				}
+			}
+		//get number of werds between
+			
+			FeatureValuePair count_word_between = FeatureValuePair.getInstance(
+					FeatureName.LinkBetweenWordCount, 
+					count_words_between.toString());
+			MLExampleFeature.setFeatureExample(exampleToProcess, count_word_between);
+
+//			String phrase1_content = phrase1.getPhraseContent().replace(" ", "_");
+//			if(phrase1.getEndArtifact().getNextArtifact()!=null)
+//			{
+//				FeatureValuePair ngramFeature = FeatureValuePair.getInstance(
+//						FeatureName.Link2GramFrom, 
+//						phrase1_content+"_"+phrase1.getEndArtifact().getNextArtifact().getContent(), "1");
+//				
+//				MLExampleFeature.setFeatureExample(exampleToProcess, ngramFeature);
+//			}
+	
+//			if(phrase1.getStart

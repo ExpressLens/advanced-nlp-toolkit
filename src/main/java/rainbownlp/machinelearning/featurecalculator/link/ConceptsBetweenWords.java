@@ -115,4 +115,20 @@ public class ConceptsBetweenWords implements IFeatureCalculator {
 //						phrase2.getStartArtifact().getPreviousArtifact().getContent()
 //						+"_"+phrase2_content, "1");
 //				
-//				MLExampleFeature.setFeatureExample(exampleTo
+//				MLExampleFeature.setFeatureExample(exampleToProcess, ngramFeature);
+//			}
+			
+	
+			
+			//number of phrases between
+			List<Phrase> phrases = Phrase.getPhrasesBetweenPhrases(phrase1, phrase2, exampleToProcess.getAssociatedFilePath());
+			
+			FeatureValuePair count_phrase_between = FeatureValuePair.getInstance(
+					FeatureName.LinkBetweenPhraseCount, 
+					String.valueOf(phrases.size()));
+			
+			MLExampleFeature.setFeatureExample(exampleToProcess, count_phrase_between);
+	}
+
+	
+}

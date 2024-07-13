@@ -58,4 +58,28 @@ public class LinkGeneralFeatures implements IFeatureCalculator {
 			
 			MLExampleFeature.setFeatureExample(exampleToProcess, fromPhraseContentFeature);
 			
-			FeatureValuePair toPhraseContentFeature = Feat
+			FeatureValuePair toPhraseContentFeature = FeatureValuePair.getInstance(
+					FeatureName.ToPhraseContent, 
+					phrase2.getPhraseContent(), "1");
+			
+			MLExampleFeature.setFeatureExample(exampleToProcess, toPhraseContentFeature);
+			
+	}
+	//it can retuen BetweenSentence or WithinSentence(within)
+	public static String getInterMentionLocationType(Phrase p1, Phrase p2)
+	{
+		String relation_type = "withinSent";
+		if(p1.getStartArtifact().getParentArtifact().equals(p2.getEndArtifact().getParentArtifact()))
+		{
+			relation_type = "withinSent";
+		}
+		//TODO we can further analyze
+		else
+		{
+			relation_type = "betweenSent";
+		}
+		return relation_type;
+	}
+
+	
+}

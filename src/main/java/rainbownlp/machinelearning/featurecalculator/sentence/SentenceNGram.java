@@ -51,4 +51,11 @@ public class SentenceNGram implements IFeatureCalculator {
 				}
 			}
 			cur_content = cur_content.replaceAll("^_", "");
-			FeatureVa
+			FeatureValuePair value_pair = FeatureValuePair.getInstance(
+					featureName, cur_content, "1");
+			MLExampleFeature.setFeatureExample(example,value_pair);
+
+		}
+	}
+
+}

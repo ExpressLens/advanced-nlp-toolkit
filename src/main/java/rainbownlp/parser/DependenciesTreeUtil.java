@@ -67,4 +67,38 @@ public class DependenciesTreeUtil {
 						headWord2.getContent()+word2Offset);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("error in getParseTreeDistance:"+headWord1+hea
+			System.out.println("error in getParseTreeDistance:"+headWord1+headWord2);
+		}
+		
+		return path;
+	}
+	
+	// find the dependencies of a word within a sentence
+	public List<String> getDependencyLinkedWords(String word, int word_index, int sentence_id) throws Exception{
+		
+		List<String> dependencyType=new ArrayList<String>();
+		
+		for(DependencyLine dependency : dependencies)
+		{
+			if(dependency.firstOffset == word_index)
+				dependencyType.add(dependency.secondPart);
+			if(dependency.secondOffset == word_index)
+				dependencyType.add(dependency.firstPart);
+		}
+				
+		return dependencyType;
+	}	
+	// find the dependencies of a word within a sentence
+		public List<String> getDependencyTypes(String word, int sentence_id) throws Exception{
+			
+			List<String> dependencyType=new ArrayList<String>();
+			
+			for(DependencyLine dependency : dependencies)
+			{
+				if(dependency.hasWord(word))
+					dependencyType.add(dependency.relationName);
+			}
+				
+			return dependencyType;
+		}
+}

@@ -20,4 +20,34 @@ import opennlp.tools.postag.POSSample;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.ObjectStream;
-import
+import opennlp.tools.util.PlainTextByLineStream;
+import opennlp.tools.util.Span;
+import opennlp.uima.tokenize.WhitespaceTokenizer;
+import rainbownlp.core.Artifact;
+import rainbownlp.util.HibernateUtil;
+//This class will read all the training sentences and parse them and put penn tree and dependency and POS in the databse
+import rainbownlp.util.ConfigurationUtil;
+
+public class ParseHandler {
+	public ArrayList<WordTag> sentenceWords = new ArrayList<WordTag>();
+	POSModel posModel;
+	POSTaggerME tagger;
+	ChunkerME chunkerME;
+
+	public ParseHandler() throws  IOException
+	{
+		POSModel posModel = new POSModelLoader()
+			.load(new File(ConfigurationUtil.getResourcePath("en-pos-maxent.bin")));
+		tagger = new POSTaggerME(posModel);
+//		// chunker
+		InputStream is = ConfigurationUtil.getResourceStream("en-chunker.bin");
+		ChunkerModel cModel = new ChunkerModel(is);
+ 
+		chunkerME = new ChunkerME(cModel);
+	}
+	public static StanfordParser s_parser = new StanfordParser();
+	public static void main(String[] args) throws Exception
+	{
+
+		
+////		StanfordParser s_parser = new Stanford

@@ -50,4 +50,39 @@ public class ParseHandler {
 	{
 
 		
-////		StanfordParser s_parser = new Stanford
+////		StanfordParser s_parser = new StanfordParser();
+//		//get all sentence artifact
+		List<Artifact> sentences = 
+			Artifact.listByType(Artifact.Type.Sentence,true);
+		ParseHandler ph = new ParseHandler();
+		
+		for (Artifact sentence:sentences)
+		{
+			ph.sentenceChunker(sentence.getContent());
+			
+//			calculatePOS(s_parser,sentence);
+			
+//			//now parse the normalized sentence( here just normalized to head)
+//			NormalizedSentence normalized_sent_obj = NormalizedSentence.getInstance(sentence,NormalizationMethod.MethodType.MentionToHead);
+//			String normalized_sent = normalized_sent_obj.getNormalizedContent();
+//			s_parser.parse(normalized_sent);
+//			
+//			String nor_dependencies = s_parser.getDependencies();
+//			String nor_penn_tree = s_parser.getPenn();
+//			normalized_sent_obj.setNormalizedDependency(nor_dependencies);
+//			normalized_sent_obj.setNormalizedPennTree(nor_penn_tree);
+//			
+//			HibernateUtil.save(normalized_sent_obj);
+//			
+//			HibernateUtil.clearLoaderSession();
+		break;
+		}
+
+		
+	}
+	
+	public void calculatePOS(Artifact sentence ) throws Exception
+	{
+		if (s_parser == null)
+		{
+			s_parser = new St

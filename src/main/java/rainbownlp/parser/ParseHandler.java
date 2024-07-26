@@ -85,4 +85,39 @@ public class ParseHandler {
 	{
 		if (s_parser == null)
 		{
+			s_parser = new StanfordParser();
+		}
+		s_parser.parse(sentence.getContent());
+		//TODO put dependencies
+		String pos_tagged_sentence = s_parser.getTagged();
+		String dependencies = s_parser.getDependencies();
+		String penn_tree = s_parser.getPenn();
+		
+		sentence.setPOS(pos_tagged_sentence);
+		sentence.setStanDependency(dependencies);
+		sentence.setStanPennTree(penn_tree);
+		HibernateUtil.save(sentence);
+		
+		ArrayList<WordTag> w_tags = analyzePOSTaggedSentence(pos_tagged_sentence);
+		for (int i=0;i<w_tags.size();i++)
+		{
+			WordTag wt = w_tags.get(i);
+			//get artifact
+			Artifact word_in_sent = Artifact.findInstance(sentence, i);
+					
+			if (word_in_sent.getContent().matches("\\w+") && !word_in_sent.getContent().equals(wt.content))
+			{
+				throw (new Exception("Related artifact is not found"));
+			}
+			//set POS
+			word_in_sent.setPOS(wt.POS);
+			HibernateUtil.save(word_in_sent);
+			
+			HibernateUtil.clearLoaderSession();
+		}
+	}
+	public String calculatePOS(String content) throws Exception
+	{
+		if (s_parser == null)
+		{
 			s_parser = new St

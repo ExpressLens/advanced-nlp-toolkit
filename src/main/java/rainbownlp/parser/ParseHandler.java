@@ -120,4 +120,45 @@ public class ParseHandler {
 	{
 		if (s_parser == null)
 		{
-			s_parser = new St
+			s_parser = new StanfordParser();
+		}
+		s_parser.parse(content);
+		//TODO put dependencies
+		String pos_tagged_sentence = s_parser.getTagged();
+		return pos_tagged_sentence;
+	}
+	
+	//This will return a list of the word tag objects based on the tagged sentence
+	public ArrayList<WordTag> analyzePOSTaggedSentence(String pTaggedSentence) throws Exception
+	{
+		String tokens[] = pTaggedSentence.split(" ");
+		ArrayList<WordTag> word_tags =  new ArrayList<ParseHandler.WordTag>();
+		int count=0;
+		for (String token:tokens)
+		{
+			WordTag wt = new WordTag();
+			Pattern p = Pattern.compile("(.*)\\/([^\\/]+)");
+			Matcher m = p.matcher(token);
+			if (m.matches())
+			{
+				String content = m.group(1);
+				content =  content.replaceAll("\\\\/", "/");
+				wt.content = content;
+				wt.POS = m.group(2);
+				wt.offset = count;
+				word_tags.add(wt);
+				count++;
+			}
+			else
+			{
+				throw (new Exception("the POS tag doesn't match the pattern"));
+			}
+			
+			
+		}
+		return word_tags;
+	}
+	
+//	public static void nounPhraseTagger() throws IOException
+//	{
+//	

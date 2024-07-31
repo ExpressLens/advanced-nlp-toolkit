@@ -161,4 +161,41 @@ public class ParseHandler {
 	
 //	public static void nounPhraseTagger() throws IOException
 //	{
-//	
+//		InputStream modelIn = null;
+//		ChunkerModel model = null;
+//
+//		modelIn = new FileInputStream("/host/ubnutustuff/projects/rnlp/rnlp/resources/en-chunker.bin");
+//		model = new ChunkerModel(modelIn);
+//		modelIn.close();
+//		ChunkerME chunker = new ChunkerME(model);
+//		String input = 
+//			"This is a very good test";
+//		
+//		if (s_parser == null)
+//		{
+//			s_parser = new StanfordParser();
+//		}
+//		s_parser.parse(input);
+//		//TODO put dependencies
+//		String pos_tagged_sentence = s_parser.getTagged();
+//		
+//		String sent_tokens[]= input.split(" ");
+//		
+//		String tag[] = chunker.chunk(sent_tokens, pos_tagged_sentence.split(" "));
+//
+//		for (int i=0; i<sent_tokens.length;i++)
+//		{
+//			System.out.println(sent_tokens[i]+"**"+tag[i]);
+//		}
+		
+		
+
+
+//	}
+	public Span[] sentenceChunker(String sentence_content) throws Exception {
+		 
+		PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
+		
+//		String sentence_content = sent.getContent();
+//		String[] sent_tokens = {};
+//		List<Artifact> childs = sent.getChildsArtif

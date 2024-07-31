@@ -198,4 +198,41 @@ public class ParseHandler {
 		
 //		String sentence_content = sent.getContent();
 //		String[] sent_tokens = {};
-//		List<Artifact> childs = sent.getChildsArtif
+//		List<Artifact> childs = sent.getChildsArtifact();
+//		
+//		for (int i=0;i<childs.size();i++)
+//		{
+//			sent_tokens[i]=childs.get(i).getContent();
+//			
+//		}
+		
+//		String sentPOS = calculatePOS(sentence_content);
+		
+//		ObjectStream<String> lineStream = new PlainTextByLineStream(
+//				new StringReader(sentence_content));
+ 
+		perfMon.start();
+//		String line;
+//		String whitespaceTokenizerLine[] = null;
+ 
+		String[] tags = null;
+//		while ((line = lineStream.read()) != null) {
+// 
+//			whitespaceTokenizerLine = WhitespaceTokenizer.INSTANCE
+//					.tokenize(line);
+//			tags = tagger.tag(whitespaceTokenizerLine);
+// 
+////			POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
+////			System.out.println(sample.toString());
+// 
+//			perfMon.incrementCounter();
+//		}
+//		perfMon.stopAndPrintFinalResult();
+		String[] tokens= sentence_content.split(" ");
+		tags = tagger.tag(tokens);
+		Span[] spans = chunkerME.chunkAsSpans(tokens, tags);
+//		String shallow_parsed_sent = "";
+//		String sent_transaction = "";
+		for (Span s : spans)
+//			System.out.println(s.toString()+ "  "+s.getType());
+			System.out.println(s.toString()

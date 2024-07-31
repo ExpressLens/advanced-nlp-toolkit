@@ -235,4 +235,17 @@ public class ParseHandler {
 //		String sent_transaction = "";
 		for (Span s : spans)
 //			System.out.println(s.toString()+ "  "+s.getType());
-			System.out.println(s.toString()
+			System.out.println(s.toString()+ "  "+s.getType()+" "+tokens[s.getStart()] + " "+tokens[s.getEnd()-1]);
+		return spans;
+	}
+	private static class WordTag{
+		public String content;
+		public String POS;
+		public int offset;
+		public WordTag() {
+			// TODO Auto-generated constructor stub
+		}
+	}
+	
+	
+}

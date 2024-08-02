@@ -76,4 +76,34 @@ public class SimpleDocumentLoader extends DocumentAnalyzer {
 		}
 	}
 
-	protected void loadWords(Artifact parentSentence,  List<Stri
+	protected void loadWords(Artifact parentSentence,  List<String> tokens, 
+			List<Integer> starts, int parentOffset) {
+
+		List<Artifact> tokensArtifacts = new ArrayList<Artifact>();
+		Artifact previous_word = null;
+		int tokens_count = tokens.size();
+		//save POS
+		String textContent = "";
+		Artifact new_word = null;
+		//		Util.log(""+tokens_count, 1);
+		for(int curTokenIndex=0;
+				curTokenIndex<tokens_count;curTokenIndex++){
+			textContent = 
+					PTBTokenizer.ptbToken2Text(tokens.get(curTokenIndex));
+			new_word = Artifact.getInstance(
+					Artifact.Type.Word, 
+					parentSentence.getAssociatedFilePath(), starts.get(curTokenIndex));
+			new_word.setContent(textContent);
+			new_word.setParentArtifact(parentSentence);
+			new_word.setLineIndex(parentOffset+1);
+			new_word.setWordIndex(curTokenIndex);
+			new_word.setArtifactOptionalCategory(dsType.name());
+			if (previous_word != null) {
+				new_word.setPreviousArtifact(previous_word);
+				previous_word.setNextArtifact(new_word);
+				HibernateUtil.save(previous_word);
+			}
+
+			HibernateUtil.save(new_word);
+
+			tokensArtifacts.add(new_word);

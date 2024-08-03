@@ -144,4 +144,20 @@ public class SimpleDocumentLoader extends DocumentAnalyzer {
 				new_doc.setArtifactOptionalCategory(dsType.name());
 				HibernateUtil.save(new_doc);
 				
-				loaded_documents.add(n
+				loaded_documents.add(new_doc);
+			}
+
+			for(Artifact doc:loaded_documents){
+				System.out.print("\nLoading document: " + doc.getAssociatedFilePath());
+				try {
+					processDocument(doc);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		this.documents = loaded_documents;
+		return this.documents;
+	}
+
+}

@@ -54,4 +54,34 @@ public class Tokenizer {
 	
 	public static void fixMergedNameEntity(Artifact curArtifact) throws SQLException
 	{
-//		St
+//		String originalContent = curArtifact.getTextContent();
+//		String[] parts = originalContent.split("-");
+//		String previousContent = "";
+//		for(int i=0;i<parts.length;i++)
+//		{
+//			String content = parts[i];
+//			int j=i;
+//			do
+//			{
+//				if((NameEntityTable.possibleNameEntity(content)||
+//						EventTriggers.isPossibleTrigger(content))
+//						&& !content.equals(originalContent) &&
+//						content.length()>1)
+//				{
+//					Util.log("Fixing:"+originalContent, Level.INFO);
+//					if(i==0)
+//					{//NE is at the beginning
+//						//shorten current artifact
+//						curArtifact.setTextContent(content);
+//						//add a new artifact at the end 
+//						String remainingContent = "";
+//						for(int k=j+1;k<parts.length;k++){
+//							if(!remainingContent.equals(""))
+//								remainingContent+= "-";
+//							remainingContent+=parts[k];
+//						}
+//						
+//						Artifact dashArtifact = new Artifact("-",
+//								Type.Word, curArtifact.associatedFilePath,
+//								curArtifact.getStartIndex()+content.length(),
+//								curArtifact.getParen

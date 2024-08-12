@@ -143,4 +143,37 @@ public class Tokenizer {
 	public Tokenizer(String associatedFilePath) throws IOException {
 		txt_file_path = associatedFilePath;
 		tokenization_file = txt_file_path.replace(".txt", ".tok");
-		if(FileUtil.fileEx
+		if(FileUtil.fileExists(tokenization_file))
+			processFileWithTokenization(tokenization_file);
+		else
+			processFile();
+	}
+	public Tokenizer(){
+		
+	}
+	
+	public void processLines(String[] sentencesToProcess, Integer[] sentencesStarts, int parentOffset) throws IOException{
+		for(int line_number = 0;line_number<sentencesToProcess.length;line_number++){
+			String line = sentencesToProcess[line_number];
+			List<Word> tokensInSentence = getTokens(line);
+			ArrayList<Integer> tokens_indexes = new ArrayList<Integer>();
+			ArrayList<String> tokens = new ArrayList<String>();
+			
+			for(int token_index = 0;token_index<tokensInSentence.size();token_index++)
+			{
+				tokens_indexes.add(tokensInSentence.get(token_index).beginPosition()+
+						sentencesStarts[line_number]+
+						parentOffset);
+				tokens.add(tokensInSentence.get(token_index).word());
+			}
+			
+			sentences_tokens_indexes.put(line_number, tokens_indexes);
+			sentences_tokens.put(line_number, tokensInSentence);
+			sentences_tokens_string.put(line_number, tokens);
+			sentences.put(line_number, line);
+		}
+		
+	}
+	
+
+	public void processFile() throws I

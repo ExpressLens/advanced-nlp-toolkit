@@ -113,3 +113,34 @@ public class Tokenizer {
 //						if(previousContent.equals(""))
 //						{
 //							curArtifact.setTextContent("-");
+//							neArtifact.setNextArtifact(curArtifact.getNextArtifact());
+//							curArtifact.setNextArtifact(neArtifact);
+//						}else{
+//							curArtifact.setTextContent(previousContent);
+//							//add a new artifact at the end 
+//							
+//							Artifact dashArtifact = 
+//								new Artifact("-", Type.Word, curArtifact.associatedFilePath,
+//									curArtifact.getStartIndex()+previousContent.length(),
+//									curArtifact.getParentArtifact());
+//							
+//							neArtifact.setNextArtifact(curArtifact.getNextArtifact());
+//							curArtifact.setNextArtifact(dashArtifact);
+//							dashArtifact.setNextArtifact(neArtifact);
+//						}
+//					}
+//					return;
+//				}
+//				j++;
+//				if(j<parts.length)
+//					content+="-"+parts[j];
+//			}while(j<parts.length);
+//			if(!previousContent.equals(""))
+//				previousContent+="-";
+//			previousContent += parts[i];
+//		}
+	}
+	public Tokenizer(String associatedFilePath) throws IOException {
+		txt_file_path = associatedFilePath;
+		tokenization_file = txt_file_path.replace(".txt", ".tok");
+		if(FileUtil.fileEx

@@ -84,4 +84,32 @@ public class Tokenizer {
 //						Artifact dashArtifact = new Artifact("-",
 //								Type.Word, curArtifact.associatedFilePath,
 //								curArtifact.getStartIndex()+content.length(),
-//								curArtifact.getParen
+//								curArtifact.getParentArtifact());
+//						if(remainingContent.equals(""))
+//						{
+//							dashArtifact.setNextArtifact(curArtifact.getNextArtifact());
+//							curArtifact.setNextArtifact(dashArtifact);
+//						}else{
+//							Artifact neArtifact = new Artifact(remainingContent,
+//									Type.Word, curArtifact.associatedFilePath,
+//									curArtifact.getStartIndex()+content.length()+1,
+//									curArtifact.getParentArtifact());
+//							neArtifact.setNextArtifact(curArtifact.getNextArtifact());
+//							curArtifact.setNextArtifact(dashArtifact);
+//							dashArtifact.setNextArtifact(neArtifact);
+//						}
+//						
+//						
+//					}
+//					if(parts.length>1 && 
+//							i==(parts.length-1))
+//					{//NE is at the end
+//						//shorten current artifact
+//						Artifact neArtifact = new Artifact(content,
+//								Type.Word, curArtifact.associatedFilePath,
+//								curArtifact.getStartIndex()+previousContent.length()+1,
+//								curArtifact.getParentArtifact());
+//						
+//						if(previousContent.equals(""))
+//						{
+//							curArtifact.setTextContent("-");

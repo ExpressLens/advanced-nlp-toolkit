@@ -206,4 +206,31 @@ public class Tokenizer {
 			FileUtil.readWholeFile(txt_file_path).replaceAll("\\s+", " ");
 		compressedText = 
 			original_txt_content.replaceAll(" |\\n", "");
-		if(compressedText.equals
+		if(compressedText.equals("")) return;
+		
+		int curIndex = 0;
+		String compressed_original_sofar = ""+original_txt_content.charAt(curIndex);
+		String compressed_tokenized_sofar = "";
+		int sentence_start=0;
+		for(int line_number = 0;line_number<lines_tokenized.size();line_number++){
+			String line = lines_tokenized.get(line_number);
+			List<Word> tokensInSentence = new ArrayList<Word>();
+			String[] tokensInSentence_str = line.split(" ");
+			ArrayList<Integer> tokens_indexes = new ArrayList<Integer>();
+			
+			for(int token_index = 0;token_index<tokensInSentence_str.length;token_index++)
+			{
+				if(!tokensInSentence_str[token_index].equals("")) 
+				{
+					String tmp_compressed_tokenized_sofar = 
+						compressed_tokenized_sofar + 
+						tokensInSentence_str[token_index].charAt(0);
+					while(!compressed_original_sofar.equals(
+							tmp_compressed_tokenized_sofar))
+					{
+						do{
+							curIndex++;
+							compressed_original_sofar += 
+								original_txt_content.charAt(curIndex);
+						}while(original_txt_content.charAt(curIndex) == ' ');
+						compress

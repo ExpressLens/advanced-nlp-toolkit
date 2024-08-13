@@ -233,4 +233,28 @@ public class Tokenizer {
 							compressed_original_sofar += 
 								original_txt_content.charAt(curIndex);
 						}while(original_txt_content.charAt(curIndex) == ' ');
-						compress
+						compressed_original_sofar = 
+							compressed_original_sofar.replaceAll(" |\\n", "");
+					}
+				}
+				
+				tokens_indexes.add(curIndex);
+				tokensInSentence.add(new 
+						Word(tokensInSentence_str[token_index], curIndex, 
+								curIndex+tokensInSentence_str[token_index].length()));
+				compressed_tokenized_sofar += tokensInSentence_str[token_index];
+			}
+			
+			sentences_tokens_indexes.put(line_number, tokens_indexes);
+			sentences_tokens.put(line_number, tokensInSentence);
+			sentences.put(line_number, line);
+			sentence_start+= line.length();
+		}
+		
+	}
+	public HashMap<Integer, String>  getSentences() {
+		
+		return sentences;
+	}
+
+}

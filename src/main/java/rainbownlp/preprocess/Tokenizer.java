@@ -176,4 +176,34 @@ public class Tokenizer {
 	}
 	
 
-	public void processFile() throws I
+	public void processFile() throws IOException{
+		List<String> lines = FileUtil.loadLineByLine(txt_file_path);
+		
+		int sentence_start=0;
+		for(int line_number = 0;line_number<lines.size();line_number++){
+			String line = lines.get(line_number);
+			List<Word> tokensInSentence = getTokens(line);
+			ArrayList<Integer> tokens_indexes = new ArrayList<Integer>();
+			
+			for(int token_index = 0;token_index<tokensInSentence.size();token_index++)
+			{
+				tokens_indexes.add(tokensInSentence.get(token_index).beginPosition()+sentence_start+line_number+1);
+			}
+			
+			sentences_tokens_indexes.put(line_number, tokens_indexes);
+			sentences_tokens.put(line_number, tokensInSentence);
+			sentences.put(line_number, line);
+			sentence_start+= line.length();
+		}
+		
+	}
+	
+	public void processFileWithTokenization(String tokenizationFilePath) throws IOException{
+		List<String> lines_tokenized = 
+			FileUtil.loadLineByLine(tokenizationFilePath);
+		
+		original_txt_content = 
+			FileUtil.readWholeFile(txt_file_path).replaceAll("\\s+", " ");
+		compressedText = 
+			original_txt_content.replaceAll(" |\\n", "");
+		if(compressedText.equals

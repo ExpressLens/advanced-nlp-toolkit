@@ -53,3 +53,59 @@ public class ConfigurationUtil {
 				InputStream config_file = 
 						ConfigurationUtil.class.getClassLoader().
 							getResourceAsStream("configuration.conf");//
+					//Configuration.class.getClassLoader().getResourceAsStream("/configuration.properties");
+				rnlpConfigFile.load(config_file);
+				
+				configFile.putAll(rnlpConfigFile);
+				
+				MinInstancePerLeaf = Integer.parseInt(configFile.getProperty("MinInstancePerLeaf"));
+				SVMCostParameter = Double.parseDouble(configFile.getProperty("SVMCostParameter"));
+				SVMPolyCParameter = Double.parseDouble(configFile.getProperty("SVMPolyCParameter"));
+				ReleaseMode = Boolean.parseBoolean(configFile.getProperty("ReleaseMode"));
+				SVMKernel = SVMKernels.values()[Integer.parseInt(configFile.getProperty("SVMKernel"))];
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void init(String configurationFileName) throws IOException
+	{
+		init();
+		configFile = new Properties();
+		InputStream config_file = 
+				ConfigurationUtil.class.getClassLoader().
+				getResourceAsStream(configurationFileName);//
+		//Configuration.class.getClassLoader().getResourceAsStream("/configuration.properties");
+		configFile.load(config_file);
+	}
+	public static void init(String configurationFileName, String hibernateConfigFile) throws IOException
+	{
+		init(configurationFileName);
+		HibernateUtil.initialize("hibernate-oss.cfg.xml");
+	}
+	public static String getValue(String key){
+		init();
+		return configFile.getProperty(key);
+	}
+
+	public static int getValueInteger(String key) {
+		String val = getValue(key);
+		if(val==null) return 0;
+		int result = Integer.parseInt(val);
+		return result;
+	}
+
+	public static String getResourcePath(String resourceName) {
+		return ConfigurationUtil.class.getClassLoader().getResource(resourceName).getPath();
+	}
+
+	public static InputStream getResourceStream(String resourceName) {
+		return ConfigurationUtil.class.getClassLoader().getResourceAsStream(resourceName);
+	}
+	
+
+	
+	
+}

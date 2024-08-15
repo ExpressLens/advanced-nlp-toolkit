@@ -14,4 +14,22 @@ public class SystemUtil {
 			Runtime rt = Runtime.getRuntime();
 			Process pr = rt.exec(command);
 
-			BufferedReader in
+			BufferedReader input = new BufferedReader(new InputStreamReader(
+					pr.getInputStream()));
+
+			String line = null;
+
+			while ((line = input.readLine()) != null) {
+				System.out.println(line);
+			}
+
+			int exitVal = pr.waitFor();
+			
+			System.out.println("Exited with error code " + exitVal);
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			e.printStackTrace();
+		}
+	}
+}

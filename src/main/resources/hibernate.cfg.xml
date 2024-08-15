@@ -33,4 +33,29 @@
         <!-- Database connection settings -->
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="connection.url">jdbc:mysql://localhost/rnlp</property>
-        <property name="connection.username">DBUSER</prop
+        <property name="connection.username">DBUSER</property>
+        <property name="connection.password">DBPASS</property>
+
+        <!-- JDBC connection pool (use the built-in) -->
+        <property name="connection.pool_size">100</property>
+
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.H2Dialect</property>
+
+        <!-- Disable the second-level cache  -->
+        <property name="cache.provider_class">org.hibernate.cache.EHCacheProvider</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">false</property>
+<!--         <property name="generate_statistics">true</property> -->
+<!--         <property name="use_sql_comments">true</property> -->
+
+        <!-- Drop and re-create the database schema on startup -->
+       <property name="hbm2ddl.auto">create</property>
+
+        <!-- Names the annotated entity class -->
+        <mapping class="rainbownlp.core.Artifact"/>
+		<mapping class="rainbownlp.core.PhraseLink"/>
+		<mapping class="rainbownlp.core.Phrase"/>
+		<mapping class="rainbownlp.machinelearning.MLExampleFeature"/>
+		<mapping class
